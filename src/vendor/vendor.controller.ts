@@ -4,7 +4,7 @@ import type { createVendorDto } from './dto/vendor.dto';
 import type { updateVendorDto } from './dto/updatevendor.dto';
 
 
-@Controller({})
+@Controller()
 export class VendorController {
     vendorService: VendorService;
     constructor(vendorService:VendorService) {
