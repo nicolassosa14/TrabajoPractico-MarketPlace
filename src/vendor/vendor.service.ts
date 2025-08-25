@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { createVendorDto } from './dto/vendor.dto';
+import { updateVendorDto } from './dto/updatevendor.dto';
 
 @Injectable()
 export class VendorService {
@@ -10,15 +12,27 @@ export class VendorService {
     ];
 
     private orders: any[] = [];
-    
+//VENDORS METHODS
     getAllVendors() {
         return this.vendors;
     }
-
-    getAllOrders() {
-        return this.orders;
+    CreateVendor(vendorData: createVendorDto) {
+        const newVendor = {
+            id: this.vendors.length + 1,
+            ...vendorData
+        };
+        this.vendors.push(newVendor);
+        return newVendor;
+    }
+    UpdateVendor(VendorDate: updateVendorDto) {
+        
     }
 
+//ORDERS METHODS
+
+        getAllOrders() {
+        return this.orders;
+    }
     CreateOrder(orderData: any) {
         if (!orderData.vendorId) {
             return('vendorId is required');

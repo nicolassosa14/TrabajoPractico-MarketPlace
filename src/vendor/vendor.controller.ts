@@ -1,5 +1,7 @@
 import { Controller, Delete, Get, Param, Patch, Post, Put, Body } from '@nestjs/common';
 import { VendorService } from './vendor.service';
+import type { createVendorDto } from './dto/vendor.dto';
+import type { updateVendorDto } from './dto/updatevendor.dto';
 
 
 @Controller({})
@@ -11,6 +13,14 @@ export class VendorController {
     @Get('/vendors')
     getAll() {
         return this.vendorService.getAllVendors();
+    }
+    @Post('/vendor')
+    createVendor(@Body() vendorData: createVendorDto) {
+        return this.vendorService.CreateVendor(vendorData);
+    }
+    @Put('/vendor')
+    updateVendor(@Body() vendorData: updateVendorDto) {
+        return this.vendorService.UpdateVendor(vendorData);
     }
     @Get('/vendor/orders')
     getAllOrders() {
