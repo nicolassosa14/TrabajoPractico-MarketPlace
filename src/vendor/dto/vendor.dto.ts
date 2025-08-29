@@ -7,7 +7,7 @@ export class createVendorDto {
 
     @IsNumber()
     @IsNotEmpty()
-    @Max(100) 
+    @Max(100)
     age: number;
 
     @IsEmail()
