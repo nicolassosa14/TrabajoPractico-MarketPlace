@@ -1,6 +1,5 @@
-import { CreateUserDTO } from '../../presentacion/dto/CreateUser.dto';
+import User from "../modelos/user";
 
 export interface UserRepository {
-createUser(data: CreateUserDTO): Promise<any>;
-
+    save(data: User): Promise<void>;
 }

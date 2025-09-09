@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, Param, Patch, Post, Put, Body } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import CreateUserRequestDTO from './dto/CreateUser.dto';
+import CreateUserCommand from '../service/DTO/CreateUser.dto';
 
 
 @Controller()
@@ -12,7 +13,14 @@ export class UserController{
 
     @Post()
     async create (@Body() CreateUserRequestDTO: CreateUserRequestDTO){
-        return this.userService.createUser(CreateUserRequestDTO);
+        const command = new CreateUserCommand(
+            CreateUserRequestDTO.name,
+            CreateUserRequestDTO.email,
+            CreateUserRequestDTO.phone
+        );
+        
+        return this.userService.createUser(command);
     }
+
     
 }
