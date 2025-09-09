@@ -1,6 +1,6 @@
 import { UserRepository } from "src/user/domain/contract/user.repository";
 import {Inject , Injectable} from '@nestjs/common';
-import {CreateUserDTO} from '../../presentacion/dto/CreateUser.dto';
+import CreateUserDTO from '../../presentacion/dto/CreateUser.dto';
 
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
