@@ -3,19 +3,30 @@ import type { UserRepository } from '../domain/contract/user.repository';
 import CreateUserCommand from './DTO/CreateUser.dto';
 import User from '../domain/modelos/user';
 import { v4 } from 'uuid';
-
-
+import DeleteUserCommand from './DTO/DeleteUser.dto';
 @Injectable()
 export class UserService {
-    constructor(
-            @Inject('UserRepository') private readonly userRepository: UserRepository
-    ){}
+  constructor(
+    @Inject('UserRepository') private readonly userRepository: UserRepository,
+  ) {}
 
-    async createUser(dto: CreateUserCommand) {
-        const user = new User(
-            dto.getName(), dto.getEmail(), dto.getPhone(), undefined, v4())
+  async createUser(dto: CreateUserCommand) {
+    const user = new User(
+      dto.getName(),
+      dto.getEmail(),
+      dto.getPhone(),
+      undefined,
+      v4(),
+    );
 
-        return this.userRepository.save(user);
+    return this.userRepository.save(user);
+  }
+
+  async deleteUser(dto: DeleteUserCommand) {
+    const id = dto.getId();
+    if(id){
+        return this.userRepository.delete(id);
     }
-
+    throw new Error('You must provide an id to delete a user.');
+  }
 }
