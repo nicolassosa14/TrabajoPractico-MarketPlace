@@ -1,7 +1,10 @@
-import User from '../modelos/user';
+
+import User  from '../modelos/user';
 
 export interface UserRepository {
-  save(data: User): Promise<void>;
-  delete(id:number): Promise<void>;
+  save(user: User): Promise<any>;           
+  delete(id: number): Promise<any>;         
+  updateUser(user: User): Promise<any>;     
+  updatePartial(user: User): Promise<any>;  
+  findById(id: number): Promise<User | null>; 
 }
-

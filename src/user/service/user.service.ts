@@ -4,6 +4,8 @@ import CreateUserCommand from './DTO/CreateUser.dto';
 import User from '../domain/modelos/user';
 import { v4 } from 'uuid';
 import DeleteUserCommand from './DTO/DeleteUser.dto';
+import UpdatePutUserCommand from './DTO/UpdateUser.dto';
+import UpdatePatchUserCommand from './DTO/UpdateUser.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -28,5 +30,33 @@ export class UserService {
         return this.userRepository.delete(id);
     }
     throw new Error('You must provide an id to delete a user.');
+  }
+
+  async UpdateUser(dto: UpdatePutUserCommand) {
+    const user = new User(
+      dto.getName(),
+      dto.getEmail(),
+      dto.getPhone(),
+      dto.getId(),
+      undefined,
+    );
+    return this.userRepository.updateUser(user);
+  }
+
+  async patchUser(dto: UpdatePatchUserCommand) {
+    const existingUser = await this.userRepository.findById(dto.getId());
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+
+    const updatedUser = new User(
+      dto.getName() ?? existingUser.getName(),
+      dto.getEmail() ?? existingUser.getEmail(),
+      dto.getPhone() ?? existingUser.getPhone(),
+      existingUser.getId(),
+      existingUser.getUuid(),
+    );
+
+    return this.userRepository.updateUser(updatedUser);
   }
 }

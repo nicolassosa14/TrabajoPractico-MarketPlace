@@ -13,4 +13,22 @@ export default class User{
     {
         return this.name;
     }
+
+    public getEmail() : string
+    {
+        return this.email;
+    }
+    
+    public getPhone() : number
+    {
+        return this.phone;
+    }
+    public getId() : number | undefined
+    {
+        return this.id;
+    }
+    public getUuid() : string | undefined
+    {
+        return this.uuid;
+    }
 }

@@ -1,39 +1,99 @@
 import { UserRepository } from 'src/user/domain/contract/user.repository';
 import { Inject, Injectable } from '@nestjs/common';
-import CreateUserDTO from '../../presentacion/dto/CreateUser.dto';
-import DeleteUserDTO from '../../presentacion/dto/DeleteUser.dto';
+import { SupabaseClient } from '@supabase/supabase-js';
+
+import CreateUserCommand from 'src/user/service/DTO/CreateUser.dto';
 import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
+import UpdatePutUserCommand from 'src/user/service/DTO/UpdateUser.dto';
+import UpdatePatchUserCommand from 'src/user/service/DTO/UpdateUser.dto';
+
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
-  constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseClient) {}
-  createUser(data: CreateUserDTO): Promise<any> {
-    throw new Error('Method not implemented.');
-  }
+  constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseClient: SupabaseClient) {}
 
-  async CreateUser(data: CreateUserDTO): Promise<any> {
-    const { data: result, error } = await this.supabaseClient
+
+  async createUser(command: CreateUserCommand): Promise<any> {
+    const { data, error } = await this.supabaseClient
       .from('users')
-      .insert([data])
+      .insert([
+        {
+          name: command.getName(),
+          email: command.getEmail(),
+          phone: command.getPhone(),
+        },
+      ])
+      .select();
 
-    const message = 'Usuario no creado';
     if (error) {
-      throw new Error(message + error);
+      throw new Error('Usuario no creado: ' + error.message);
     }
-    return result;
+    return data;
   }
 
-  
-  async DeleteUser (data: DeleteUserCommand): Promise<any> {
-    const { data: result, error } = await this.supabaseClient
+ 
+  async deleteUser(command: DeleteUserCommand): Promise<any> {
+    const { data, error } = await this.supabaseClient
       .from('users')
       .delete()
-      .eq('id', data.getId() || -1);
+      .eq('id', command.getId());
 
-    const message = 'Usuario no eliminado';
     if (error) {
-      throw new Error(message + error);
+      throw new Error('Usuario no eliminado: ' + error.message);
     }
-    return result;
+    return data;
   }
 
+  async update(command: UpdatePutUserCommand): Promise<any> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .update({
+        name: command.getName(),
+        email: command.getEmail(),
+        phone: command.getPhone(),
+      })
+      .eq('id', command.getId())
+      .select();
+
+    if (error) {
+      throw new Error('Usuario no actualizado: ' + error.message);
+    }
+    return data;
+  }
+
+ 
+  async patchUser(command: UpdatePatchUserCommand): Promise<any> {
+    const updateData: any = {};
+    if (command.getName()) updateData.name = command.getName();
+    if (command.getEmail()) updateData.email = command.getEmail();
+    if (command.getPhone()) updateData.phone = command.getPhone();
+
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .update(updateData)
+      .eq('id', command.getId())
+      .select();
+
+    if (error) {
+      throw new Error('Usuario no actualizado (PATCH): ' + error.message);
+    }
+    return data;
+  }
+
+
+  async findById(id: number): Promise<any> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      throw new Error('Usuario no encontrado: ' + error.message);
+    }
+    return data;
+  }
+
+  save(user: any): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
 }
