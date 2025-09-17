@@ -5,6 +5,7 @@ import { VendorModule } from './vendor/vendor.module';
 import { UserController } from './user/presentacion/user.controller';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/service/user.service';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
   imports: [VendorModule, UserModule],

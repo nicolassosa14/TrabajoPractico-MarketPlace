@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post, Put } from '@nestjs/common';
+import { Get,Body, Controller, Delete, Param, Patch, Post, Put } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import CreateUserRequestDTO from './dto/CreateUser.dto';
 import CreateUserCommand from '../service/DTO/CreateUser.dto';
@@ -6,7 +6,7 @@ import DeleteUserCommand from '../service/DTO/DeleteUser.dto';
 import UpdatePutUserCommand from '../service/DTO/UpdateUser.dto';
 import UpdatePatchUserCommand from '../service/DTO/UpdateUser.dto';
 
-@Controller()
+@Controller('/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -14,6 +14,11 @@ export class UserController {
   async create(@Body() dto: CreateUserRequestDTO) {
     const command = new CreateUserCommand(dto.name, dto.email, dto.phone);
     return this.userService.createUser(command);
+  }
+
+  @Get()
+  async TestMessage(){
+    return 'Soy Un test'
   }
 
   @Delete(':id')

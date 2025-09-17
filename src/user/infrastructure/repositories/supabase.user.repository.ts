@@ -1,6 +1,8 @@
 import { UserRepository } from 'src/user/domain/contract/user.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import User from '../../domain/modelos/user';
+
 
 import CreateUserCommand from 'src/user/service/DTO/CreateUser.dto';
 import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
@@ -96,4 +98,38 @@ export class SupabaseUserRepository implements UserRepository {
   save(user: any): Promise<any> {
     throw new Error('Method not implemented.');
   }
+
+async delete(id: number): Promise<any> {
+        const { data, error } = await this.supabaseClient
+            .from('users')
+            .delete()
+            .eq('id', id);
+        
+        if (error) throw error;
+        return data;
+    }
+
+    async updateUser(user: User): Promise<User> {
+        const { data, error } = await this.supabaseClient
+            .from('users')
+            .update(user)
+            .eq('id', user.getId())
+            .select()
+            .single();
+        
+        if (error) throw error;
+        return data;
+    }
+
+    async updatePartial(user: User): Promise<any> {
+        const { data, error } = await this.supabaseClient
+            .from('users')
+            .update(user)
+            .eq('id', user.getId())
+            .select()
+            .single();
+        
+        if (error) throw error;
+        return data;
+    }
 }
