@@ -1,5 +1,5 @@
 import { UserRepository } from 'src/user/domain/contract/user.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import User from '../../domain/modelos/user';
 
@@ -7,6 +7,8 @@ import User from '../../domain/modelos/user';
 import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
 import UpdatePutUserCommand from 'src/user/service/DTO/UpdateUser.dto';
 import UpdatePatchUserCommand from 'src/user/service/DTO/UpdateUser.dto';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { exec } from 'node:child_process';
 //
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
@@ -21,6 +23,30 @@ export class SupabaseUserRepository implements UserRepository {
 
     if (error) {
       throw new Error('Usuario no creado: ' + error.message);
+    }
+    return data;
+  }
+  async resendVerificationEmail(email: string): Promise<any>{
+    let { data, error } = await this.supabaseClient.auth.resend({
+      type: 'signup',
+      email: email
+    })
+
+    if(error){
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
+
+    return data;
+  }
+
+  async loginUser(user: User): Promise<any> {
+    let {data,error} = await this.supabaseClient.auth.signInWithPassword({
+      email: user.getEmail(),
+      password: user.getPassword()
+    })
+
+    if(error){
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
     return data;
   }
