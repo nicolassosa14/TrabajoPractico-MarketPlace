@@ -1,19 +1,14 @@
 export default class CreateUserCommand {
-  getPhone(): number {
-    throw new Error('Method not implemented.');
-  }
   getEmail(): string {
-    throw new Error('Method not implemented.');
+    return this.email;
   }
-  getName(): string {
-    throw new Error('Method not implemented.');
+  getPassword() : string{
+    return this.password;
   }
-  private readonly name: string;
   private readonly email: string;
-  private readonly phone: number;
-  public constructor(name: string, email: string, phone: number) {
-    this.name = name;
+  private readonly password: string;
+  public constructor(email: string, password: string) {
     this.email = email;
-    this.phone = phone;
+    this.password = password;
   }
 }

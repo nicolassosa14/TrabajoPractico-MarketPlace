@@ -8,14 +8,11 @@ import {
 } from 'class-validator';
 
 export default class CreateUserRequestDTO {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  phone: number;
+  password: string;
 }

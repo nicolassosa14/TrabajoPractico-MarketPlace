@@ -12,7 +12,7 @@ export class UserController {
 
   @Post()
   async create(@Body() dto: CreateUserRequestDTO) {
-    const command = new CreateUserCommand(dto.name, dto.email, dto.phone);
+    const command = new CreateUserCommand(dto.email, dto.password);
     return this.userService.createUser(command);
   }
 
@@ -26,15 +26,4 @@ export class UserController {
     return this.userService.deleteUser(new DeleteUserCommand(id));
   }
 
-  @Put(':id')
-  async updateUser(@Param('id') id: number, @Body() dto: any) {
-    const command = new UpdatePutUserCommand(id, dto.name, dto.email, dto.phone);
-    return this.userService.UpdateUser(command);
-  }
-
-  @Patch(':id')
-  async patchUser(@Param('id') id: number, @Body() dto: any) {
-    const command = new UpdatePatchUserCommand(id, dto.name, dto.email, dto.phone);
-    return this.userService.patchUser(command);
-  }
 }

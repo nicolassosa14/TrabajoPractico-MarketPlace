@@ -3,41 +3,33 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import User from '../../domain/modelos/user';
 
-
-import CreateUserCommand from 'src/user/service/DTO/CreateUser.dto';
+//eliminar
 import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
 import UpdatePutUserCommand from 'src/user/service/DTO/UpdateUser.dto';
 import UpdatePatchUserCommand from 'src/user/service/DTO/UpdateUser.dto';
-
+//
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
   constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseClient: SupabaseClient) {}
 
 
-  async createUser(command: CreateUserCommand): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .insert([
-        {
-          name: command.getName(),
-          email: command.getEmail(),
-          phone: command.getPhone(),
-        },
-      ])
-      .select();
+  async createUser(user: User): Promise<any> {
+    let { data, error } = await this.supabaseClient.auth.signUp({
+      email: user.getEmail(),
+      password: user.getPassword()
+    })
 
     if (error) {
       throw new Error('Usuario no creado: ' + error.message);
     }
     return data;
   }
-
  
-  async deleteUser(command: DeleteUserCommand): Promise<any> {
+  async deleteUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
       .delete()
-      .eq('id', command.getId());
+      .eq('id', user.getId());
 
     if (error) {
       throw new Error('Usuario no eliminado: ' + error.message);
@@ -95,9 +87,6 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-  save(user: any): Promise<any> {
-    throw new Error('Method not implemented.');
-  }
 
 async delete(id: number): Promise<any> {
         const { data, error } = await this.supabaseClient
