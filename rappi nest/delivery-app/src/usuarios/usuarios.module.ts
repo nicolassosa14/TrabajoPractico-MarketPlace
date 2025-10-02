@@ -9,10 +9,11 @@ import { UsuarioService } from './service/usuario.service';
 import { AuthController } from './presentation/auth.controller';
 import { UsuarioController } from './presentation/usuario.controller';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Usuario, TipoUsuario])],
-  controllers: [AuthController, UsuarioController], // <-- agregamos UsuarioController
+  controllers: [AuthController, UsuarioController], 
   providers: [UsuarioService, UsuarioRepository, TipoUsuarioRepository],
-  exports: [UsuarioService],
+  exports: [UsuarioService, UsuarioRepository],
 })
 export class UsuariosModule {}

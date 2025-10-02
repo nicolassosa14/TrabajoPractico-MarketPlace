@@ -42,4 +42,5 @@ export class AdminUserRepository {
     await this.usuarioRepo['repo'].remove(usuario);
     return { message: 'Usuario eliminado correctamente' };
   }
+  
 }

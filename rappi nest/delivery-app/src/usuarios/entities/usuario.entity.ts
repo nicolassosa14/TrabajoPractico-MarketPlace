@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { TipoUsuario } from './tipo-usuario.entity';
+import { Direccion } from '../../direcciones/entities/direccion.entity';
+
 
 @Entity({ name: 'usuarios' })
 export class Usuario {
@@ -15,7 +17,6 @@ export class Usuario {
   @Column({ length: 100, unique: true })
   email: string;
 
-  // Tené en cuenta que tu esquema usa BIGINT; acá usamos string o number
   @Column({ name: 'num_telefono', type: 'bigint', nullable: true })
   num_telefono?: number;
 
@@ -28,4 +29,7 @@ export class Usuario {
   @ManyToOne(() => TipoUsuario, t => t.usuarios, { eager: true })
   @JoinColumn({ name: 'tipo_usuario_id' })
   tipoUsuario: TipoUsuario;
+
+  @OneToMany(() => Direccion, d => d.usuario)
+  direcciones: Direccion[];
 }

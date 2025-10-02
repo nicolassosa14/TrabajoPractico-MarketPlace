@@ -60,4 +60,12 @@ export class AdminService {
       role: u.tipoUsuario.nombre.toUpperCase(), 
     }));
   }
+
+  async getUserById(id: number) {
+  const usuario = await this.adminRepo.findById(id);
+  if (!usuario) throw new BadRequestException('Usuario no encontrado');
+
+  const { passwordHash, tipoUsuario, ...safe } = usuario as any;
+  return { ...safe, role: tipoUsuario.nombre.toUpperCase() };
+}
 }
