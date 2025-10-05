@@ -61,7 +61,7 @@ export class LoginService {
       case 'CLIENT':
         return '/client';
       default:
-        return '/'; // fallback
+        return '/'; 
     }
   }
 }

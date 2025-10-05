@@ -15,7 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // validate retorna lo que queda disponible en request.user
     return { userId: payload.sub, role: payload.role };
   }
 }

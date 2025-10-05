@@ -80,7 +80,6 @@ describe('DireccionController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    // CORRECCIÓN: Usamos clear() en vez de delete({})
     await direccionRepo.clear();
   });
 

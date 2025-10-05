@@ -6,11 +6,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoginController } from './presentation/login.controller';
 import { LoginService } from './service/login.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { UsuarioRepository } from '../usuarios/repositories/usuario.repository.js';
-import { TipoUsuarioRepository } from 'src/usuarios/repositories/tipoUsuario.repository';
+import { UsuarioRepository } from '../usuarios/repositories/usuario.repository';
+import { TipoUsuarioRepository } from '../usuarios/repositories/tipoUsuario.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Usuario } from 'src/usuarios/entities/usuario.entity';
-import { TipoUsuario } from 'src/usuarios/entities/tipo-usuario.entity';
+import { Usuario } from '../usuarios/entities/usuario.entity';
+import { TipoUsuario } from '../usuarios/entities/tipo-usuario.entity';
 
 @Module({
   imports: [
