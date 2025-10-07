@@ -1,18 +1,24 @@
 import {
   IsString,
   IsNotEmpty,
-  IsNumber,
-  Max,
   IsEmail,
-  IsDate,
 } from 'class-validator';
 
 export default class CreateUserRequestDTO {
   @IsEmail()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El email es obligatorio.' })
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'La contraseña es obligatoria.' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'El nombre es obligatorio.' })
+  first_name: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'El nombre es obligatorio.' })
+  last_name: string;
+
 }

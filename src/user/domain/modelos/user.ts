@@ -2,8 +2,9 @@ export default class User{
     public constructor (
         private readonly email: string,
         private readonly password: string,
-        private readonly phone?: number,
-        private readonly name?: string,
+        private readonly first_name?: string,
+        private readonly last_name?: string,
+        private readonly phone_number?: number,
         private readonly id?: number,
         private readonly uuid?: string,
     )
@@ -14,9 +15,13 @@ export default class User{
         return this.password
     }
 
-    public getName() : string | undefined
+    public getFirst_Name() : string | undefined
     {
-        return this.name;
+        return this.first_name;
+    }
+    public getLast_Name() : string | undefined
+    {
+        return this.last_name;
     }
 
     public getEmail() : string
@@ -26,7 +31,7 @@ export default class User{
     
     public getPhone() : number | undefined
     {
-        return this.phone;
+        return this.phone_number;
     }
     public getId() : number | undefined
     {

@@ -7,23 +7,32 @@ import {
 } from 'class-validator';
 
 export default class PutUserRequestDTO{
-    @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  @IsString()
+  first_name: string;
+
+  @IsOptional()
+  @IsString()
+  last_name: string;
+
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @IsNumber()
   @IsNotEmpty()
-  phone: number;
+  phone_number?: number;
 }
 
-export class PathcUserRequestDTO{
+export class PatchUserRequestDTO{
     @IsOptional()
     @IsString()
-    
-    name?: string;
+    first_name?: string;
+
+    @IsOptional()
+    @IsString()
+    last_name?: string;
+
     @IsOptional()
     @IsEmail()
     @IsNotEmpty()
@@ -31,6 +40,9 @@ export class PathcUserRequestDTO{
 
     @IsOptional()
     @IsNumber()
-    
-    phone?: number;
+    phone_number?: number;
+
+    @IsNotEmpty()
+    @IsString()
+    user_id:string;
 }

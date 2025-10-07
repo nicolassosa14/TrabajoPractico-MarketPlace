@@ -1,4 +1,4 @@
-import { Get,Body, Controller, Delete, Param, Patch, Post, Put } from '@nestjs/common';
+import { Get,Body, Controller, Delete, Param, Patch, Post, Req , BadRequestException, UseGuards } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 //DTO PRESENTACION
 import CreateUserRequestDTO from './dto/CreateUser.dto';
@@ -8,6 +8,8 @@ import CreateUserCommand from '../service/DTO/CreateUser.dto';
 import LoginUserCommand from '../service/DTO/LoginUser.dto';
 import DeleteUserCommand from '../service/DTO/DeleteUser.dto';
 
+import { PatchUserRequestDTO } from './dto/UpdateUser.dto';
+import { PatchUserCommand } from '../service/DTO/UpdateUser.dto';
 
 @Controller('/users')
 export class UserController {
@@ -15,7 +17,20 @@ export class UserController {
 
   @Post()
   async create(@Body() dto: CreateUserRequestDTO) {
-    const command = new CreateUserCommand(dto.email, dto.password);
+    if(!dto.email){
+        throw new BadRequestException('Falta el email');
+    }
+    if(!dto.password){
+        throw new BadRequestException('Falta la contraseña');
+    }
+    if(!dto.first_name){
+        throw new BadRequestException('Falta el nombre');
+    }
+    if(!dto.last_name){
+        throw new BadRequestException('Falta el apellido');
+    }
+    
+    const command = new CreateUserCommand(dto.email, dto.password, dto.first_name, dto.last_name);
     return this.userService.createUser(command);
   }
   @Post('/login')
@@ -28,9 +43,30 @@ export class UserController {
     return this.userService.resendVerificationEmail(email)
   }
 
-  @Get()
-  async TestMessage(){
-    return 'Soy Un test'
+  @Patch('/profile')
+  async EditUserInfo(@Body() dto: PatchUserRequestDTO){
+
+    if (!dto.user_id) {
+        throw new BadRequestException('Se requiere el ID del usuario');
+    }
+
+    // objeto solo con los campos que se enviaron
+    const updateData: Partial<PatchUserRequestDTO> = {};
+    
+    if (dto.email !== undefined) updateData.email = dto.email;
+    if (dto.first_name !== undefined) updateData.first_name = dto.first_name;
+    if (dto.last_name !== undefined) updateData.last_name = dto.last_name;
+    if (dto.phone_number !== undefined) updateData.phone_number = dto.phone_number;
+
+    const command = new PatchUserCommand(
+        dto.user_id,
+        updateData.email,
+        updateData.first_name,
+        updateData.last_name,
+        updateData.phone_number
+    );
+
+    return this.userService.EditUserInfo(command)
   }
 
 }
