@@ -42,7 +42,7 @@ export class PatchUserRequestDTO{
     @IsNumber()
     phone_number?: number;
 
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty({ message: 'El user_id es obligatorio' })
     user_id:string;
 }

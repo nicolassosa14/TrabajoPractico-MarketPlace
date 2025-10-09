@@ -39,6 +39,13 @@ export class UserService {
     return this.userRepository.resendVerificationEmail(email)
   }
 
+  async getUserProfile(user_id: string) {
+    if (!user_id) {
+        throw new BadRequestException('Se requiere el ID del usuario');
+    }
+    return this.userRepository.getUserProfile(user_id);
+  }
+
   async EditUserInfo(command: PatchUserCommand){
        try {
 
@@ -56,7 +63,7 @@ export class UserService {
         if (command.getlast_name()) updateData.last_name = command.getlast_name();
         if (command.getPhone()) updateData.phone_number = command.getPhone();
 
-        const updatedUser = await this.userRepository.updatePartial(
+        const updatedUser = await this.userRepository.updatePartialProfile(
             command.getId(),
             updateData
         );

@@ -36,7 +36,7 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-  async createProfile(user: User, id){
+  async createProfile(user: User, id: string) {
     const { error: profileError } = await this.supabaseClient.from('user_profiles').insert({
         user_id: id,
         first_name: user.getFirst_Name(),
@@ -53,6 +53,20 @@ export class SupabaseUserRepository implements UserRepository {
 
   async EditUserProfile(id: number, user: User): Promise<any> {
     
+  }
+
+  async getUserProfile(user_id: string): Promise<any> {
+
+    const { data, error } = await this.supabaseClient
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user_id)
+      .single();
+
+      if (error) {
+        throw new Error('Perfil no encontrado: ' + error.message);
+      }
+      return data;
   }
 
   async resendVerificationEmail(email: string): Promise<any>{
@@ -80,6 +94,7 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
  
+  //VER
   async deleteUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
@@ -92,6 +107,7 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
+  //POR EL MOMENTO NO SE USA
   async update(command: UpdatePutUserCommand): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
@@ -109,26 +125,7 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
- 
-  async patchUser(command: UpdatePatchUserCommand): Promise<any> {
-    const updateData: any = {};
-    if (command.getName()) updateData.name = command.getName();
-    if (command.getEmail()) updateData.email = command.getEmail();
-    if (command.getPhone()) updateData.phone_number = command.getPhone();
-
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .update(updateData)
-      .eq('id', command.getId())
-      .select();
-
-    if (error) {
-      throw new Error('Usuario no actualizado (PATCH): ' + error.message);
-    }
-    return data;
-  }
-
-  async updatePartial(id: string, partialUser: Partial<{
+  async updatePartialProfile(id: string, partialUser: Partial<{
         email?: string;
         first_name?: string;
         last_name?: string;
@@ -175,17 +172,17 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-
-async delete(id: number): Promise<any> {
+//terminar
+async delete(user_id: string): Promise<any> {
         const { data, error } = await this.supabaseClient
             .from('users')
             .delete()
-            .eq('id', id);
+            .eq('id', user_id);
         
         if (error) throw error;
         return data;
     }
-
+    //no creo que se use
     async updateUser(user: User): Promise<User> {
         const { data, error } = await this.supabaseClient
             .from('users')

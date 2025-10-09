@@ -16,7 +16,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() dto: CreateUserRequestDTO) {
+  async createUser(@Body() dto: CreateUserRequestDTO) {
     if(!dto.email){
         throw new BadRequestException('Falta el email');
     }
@@ -42,6 +42,15 @@ export class UserController {
   async resendVerificationEmail(@Param('email') email: string) {
     return this.userService.resendVerificationEmail(email)
   }
+
+  @Get('/profile')
+  async getUserProfile(@Body() user_id: string) {
+    if (!user_id) {
+        throw new BadRequestException('Se requiere el ID del usuario');
+    }
+    return this.userService.getUserProfile(user_id);
+  }
+
 
   @Patch('/profile')
   async EditUserInfo(@Body() dto: PatchUserRequestDTO){

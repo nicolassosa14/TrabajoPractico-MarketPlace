@@ -8,13 +8,9 @@ import {
 } from 'class-validator';
 
 export default class DeleteUserRequestDTO{
-    @IsNumber()
-    @IsNotEmpty()
-    id?: number;
-    
     @IsString()
-    @IsNotEmpty()
-    uuid?: string;
+    @IsNotEmpty({ message: 'El user_id es obligatorio' })
+    user_id: string;
 }
 
 
