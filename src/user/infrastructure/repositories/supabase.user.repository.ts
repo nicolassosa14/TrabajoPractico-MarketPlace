@@ -1,12 +1,12 @@
 import { UserRepository } from 'src/user/domain/contract/user.repository';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import User from '../../domain/modelos/user';
+import User from '../../domain/models/user';
 
 //eliminar
-import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
-import UpdatePutUserCommand from 'src/user/service/DTO/UpdateUser.dto';
-import UpdatePatchUserCommand from 'src/user/service/DTO/UpdateUser.dto';
+import DeleteUserCommand from 'src/user/service/dto/DeleteUser.dto';
+import UpdatePutUserCommand from 'src/user/service/dto/UpdateUser.dto';
+import UpdatePatchUserCommand from 'src/user/service/dto/UpdateUser.dto';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { exec } from 'node:child_process';
 import { profile } from 'node:console';
@@ -191,6 +191,32 @@ async delete(user_id: string): Promise<any> {
             .select()
             .single();
         
+        if (error) throw error;
+        return data;
+    }
+    //NO SE SI VAN TODAVIA, O SON DE OTRO MODULO
+    async addFavoriteVendor(user_id: string, vendor_id: string) {
+        const { data, error } = await this.supabaseClient
+            .from('user_favorite_vendors')
+            .insert({ user_id, vendor_id });
+        if (error) throw error;
+        return data;
+    }
+    async removeFavoriteVendor(user_id: string, vendor_id: string) {
+        const { data, error } = await this.supabaseClient
+            .from('user_favorite_vendors')
+            .delete()
+            .eq('user_id', user_id)
+            .eq('vendor_id', vendor_id);
+        if (error) throw error;
+        return data;
+    }
+    //
+
+    async addAdresss(user_id: string, street_address: string, city: string, postal_code: string, details: string) {
+        const { data, error } = await this.supabaseClient
+            .from('addresses')
+            .insert({ user_id, street_address, city, postal_code, details });
         if (error) throw error;
         return data;
     }

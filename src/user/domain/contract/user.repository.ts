@@ -1,5 +1,5 @@
 
-import User  from '../modelos/user';
+import User  from '../models/user';
 
 export interface UserRepository {
   createUser(user:User) : Promise<any>;
@@ -14,7 +14,8 @@ export interface UserRepository {
         phone_number?: number;
       }>): Promise<any>;  
   findById(id: number): Promise<User | null>; 
-
+  addFavoriteVendor(user_id: string, vendor_id: string): Promise<any>;
+  removeFavoriteVendor(user_id: string, vendor_id: string): Promise<any>;
   getUserProfile(user_id: string): Promise<any>;
 }
 

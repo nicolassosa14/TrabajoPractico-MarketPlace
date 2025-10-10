@@ -1,12 +1,12 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import type { UserRepository } from '../domain/contract/user.repository';
-import CreateUserCommand from './DTO/CreateUser.dto';
-import User from '../domain/modelos/user';
+import CreateUserCommand from './dto/CreateUser.dto';
+import User from '../domain/models/user';
 
-import DeleteUserCommand from './DTO/DeleteUser.dto';
-import LoginUserCommand from './DTO/LoginUser.dto';
-import { PatchUserRequestDTO } from '../presentacion/dto/UpdateUser.dto';
-import { PatchUserCommand } from './DTO/UpdateUser.dto';
+import DeleteUserCommand from './dto/DeleteUser.dto';
+import LoginUserCommand from './dto/LoginUser.dto';
+import { PatchUserRequestDTO } from '../presentation/dto/UpdateUser.dto';
+import { PatchUserCommand } from './dto/UpdateUser.dto';
 @Injectable()
 export class UserService {
   constructor(
