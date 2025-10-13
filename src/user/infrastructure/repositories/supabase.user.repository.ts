@@ -50,7 +50,7 @@ export class SupabaseUserRepository implements UserRepository {
     }
     return data;
   }
- 
+
   async deleteUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
@@ -80,7 +80,7 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
- 
+
   async patchUser(command: UpdatePatchUserCommand): Promise<any> {
     const updateData: any = {};
     if (command.getName()) updateData.name = command.getName();
