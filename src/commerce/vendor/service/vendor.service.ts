@@ -1,0 +1,59 @@
+import { Inject, Injectable } from '@nestjs/common';
+import type {VendorRepository} from '../domain/contract/vendor.repository';
+import CreateVendorCommand from '../service/DTO/CreateVendorCommand.dto';
+import Vendor from '../domain/models/vendor';
+import UpdatePatchVendorCommand, { UpdatePutVendorCommand } from './DTO/UpdateVendorCommand.dto';
+import { NotFoundException } from '@nestjs/common';
+
+
+@Injectable() 
+export class VendorService {
+    
+  constructor(
+    @Inject('VendorRepository') private readonly vendorRepository: VendorRepository,
+  ){}
+
+  async createVendor (dto: CreateVendorCommand){
+    const vendor = new Vendor(
+      dto.email,
+      dto.password,
+      dto.descripcion,
+      dto.address,
+      dto.is_active,
+      dto.name,
+    )
+    return this.vendorRepository.createVendor(vendor)
+  }
+
+  async findById(id: number): Promise<Vendor | null> {
+    const vendor = await this.vendorRepository.findById(id);
+    if (!vendor) {
+      throw new NotFoundException(`Vendor with ID ${id} not found`);
+    }
+    return vendor;
+  }
+
+  async update(command: UpdatePutVendorCommand): Promise<Vendor> {
+    await this.findById(command.getId());
+
+    const vendorToUpdate = new Vendor(
+      command.getEmail(),
+      command.getPassword(),
+      command.getDescripcion(),
+      command.getAddress(),
+      command.getIsActive(),
+      command.getName(),
+      command.getId()
+    );
+
+    return this.vendorRepository.update(vendorToUpdate);
+  }
+
+  async updatePartial(command: UpdatePatchVendorCommand): Promise<any> {
+    await this.findById(command.getId());
+    return this.vendorRepository.updatePartial(command);
+  }
+
+
+
+}

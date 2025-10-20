@@ -9,9 +9,9 @@ import LoginUserCommand from './DTO/LoginUser.dto';
 export class UserService {
   constructor(
     @Inject('UserRepository') private readonly userRepository: UserRepository,
-  ) {}
+  ) {} 
 
-  async createUser(dto: CreateUserCommand) {
+  async createUser(dto: CreateUserCommand) { 
     const user = new User(
       dto.getEmail(),
       dto.getPassword(),
@@ -19,6 +19,7 @@ export class UserService {
 
     return this.userRepository.createUser(user)
   }
+  
   async loginUser(dto: LoginUserCommand){
     const user = new User(
       dto.getEmail(),
