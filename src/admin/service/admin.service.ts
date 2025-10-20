@@ -18,15 +18,16 @@ export class AdminService {
     return this.adminRepo.findAllByRole(role);
   }
 
-  async updateUser(command: UpdateAdminCommand) {
-    const admin = new Admin(
-      command.getEmail() ?? '',
-      '',
-      command.getRole() ?? '',
-      command.getId()
-    );
-    return this.adminRepo.updateUser(admin);
-  }
+ async updateUser(command: UpdateAdminCommand) {
+  const admin = new Admin(
+    command.getEmail() ?? '',
+    command.getPassword() ?? '',
+    command.getRole() ?? '',
+    command.getId()
+  );
+  return this.adminRepo.updateUser(admin);
+}
+
 
   async deleteUser(command: DeleteAdminCommand) {
     return this.adminRepo.deleteUser(command.getId());

@@ -1,14 +1,20 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, IsIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsIn } from 'class-validator';
 
 export default class UpdateAdminRequestDTO {
   @IsString()
-  id: string;
+  @IsNotEmpty()
+  id: string; 
 
   @IsEmail()
+  @IsOptional()
+  email?: string;
+
+   @IsString()
   @IsNotEmpty()
-  email: string;
+  password: string;
 
   @IsString()
+  @IsOptional()
   @IsIn(['vendor', 'driver'])
-  role: string;
+  role?: string;
 }

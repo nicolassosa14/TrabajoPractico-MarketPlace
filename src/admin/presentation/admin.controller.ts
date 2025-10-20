@@ -11,22 +11,26 @@ import DeleteAdminCommand from '../service/DTO/DeleteAdmin.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+
   @Post('/create')
   async create(@Body() dto: CreateAdminRequestDTO) {
     const command = new CreateAdminCommand(dto.email, dto.password, dto.role);
     return this.adminService.createUser(command);
   }
 
+
   @Get('/list/:role')
   async listByRole(@Param('role') role: string) {
     return this.adminService.findAllByRole(role);
   }
 
+
   @Put('/update')
-  async update(@Body() dto: UpdateAdminRequestDTO) {
-    const command = new UpdateAdminCommand(dto.id, dto.email, dto.role);
-    return this.adminService.updateUser(command);
-  }
+async update(@Body() dto: UpdateAdminRequestDTO) {
+  const command = new UpdateAdminCommand(dto.id, dto.email, dto.password, dto.role);
+  return this.adminService.updateUser(command);
+}
+
 
   @Delete('/delete')
   async delete(@Body() dto: DeleteAdminRequestDTO) {

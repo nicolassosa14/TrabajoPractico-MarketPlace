@@ -1,4 +1,3 @@
-
 export default class CreateAdminCommand {
   constructor(
     private readonly email: string,

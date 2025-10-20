@@ -3,7 +3,7 @@ export default class Admin {
     private readonly email: string,
     private readonly password: string,
     private readonly role: string,
-    private readonly id?: string
+    private readonly id?: string 
   ) {}
 
   public getEmail(): string {
