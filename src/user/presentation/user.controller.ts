@@ -66,4 +66,9 @@ export class UserController {
     return this.userService.EditUserInfo(command)
   }
 
+  @Get('/profile-with-addresses')
+  async getUserProfileWithAddresses(@Body() dto: { user_id: string }) {
+    return this.userService.getUserWithAddresses(dto.user_id);
+  }
+
 }

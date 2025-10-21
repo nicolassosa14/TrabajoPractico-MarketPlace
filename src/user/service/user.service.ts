@@ -7,10 +7,14 @@ import DeleteUserCommand from './dto/DeleteUser.dto';
 import LoginUserCommand from './dto/LoginUser.dto';
 import { PatchUserRequestDTO } from '../presentation/dto/UpdateUser.dto';
 import { PatchUserCommand } from './dto/UpdateUser.dto';
+import { AddressService } from '../../address/service/address.service';
+
 @Injectable()
 export class UserService {
   constructor(
     @Inject('UserRepository') private readonly userRepository: UserRepository,
+        private readonly addressService: AddressService, // ← Inyectar AddressService
+
   ) {}
 
   async createUser(dto: CreateUserCommand) {
@@ -74,4 +78,19 @@ export class UserService {
     }
   }
 
+  async getUserWithAddresses(user_id: string) {
+    if (!user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
+    
+    const [userProfile, addresses] = await Promise.all([
+      this.userRepository.getUserProfile(user_id),
+      this.addressService.findAllAddressByUserID(user_id)
+    ]);
+
+    return {
+      ...userProfile,
+      addresses
+    };
+  }
 }
