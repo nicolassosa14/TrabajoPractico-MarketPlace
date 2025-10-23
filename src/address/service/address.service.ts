@@ -3,6 +3,7 @@ import CreateAddressCommand from './dto/CreateAddress.dto';
 import UpdateAddressCommand from './dto/UpdateAddress.dto';
 import type { AddressRepository } from '../domain/contract/address.repository';
 import Address from '../domain/models/address';
+import DeleteAddressCommand from './dto/DeleteAddress.dto';
 
 @Injectable()
 export class AddressService {
@@ -18,15 +19,21 @@ export class AddressService {
     return this.addressRepository.findAllAddressByUserID(user_id);
   }
 
-  UpdateAddress(dto: UpdateAddressCommand) {
+  UpdateAddress(dtoUpdate: UpdateAddressCommand) {
     const address = new Address(
-      '', // user_id no se usa en update, solo para compatibilidad
-      dto.street_address || '',
-      dto.city || '',
-      dto.postal_code || '',
-      dto.details
+      dtoUpdate.user_id,
+      dtoUpdate.postal_code,
+      dtoUpdate.street_address,
+      dtoUpdate.city,
+      dtoUpdate.id,
+      dtoUpdate.details
     );
-    return this.addressRepository.EditAdressByID(dto.id, address);
+
+    return this.addressRepository.EditAdressByID(address);
+  }
+
+  deleteAddress(dto:DeleteAddressCommand) {
+    return this.addressRepository.deleteAddress(dto.getUser_id(), dto.getId());
   }
 
 }

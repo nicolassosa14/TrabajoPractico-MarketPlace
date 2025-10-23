@@ -5,6 +5,8 @@ import CreateAddressCommand from '../service/dto/CreateAddress.dto';
 
 import UpdateAddressRequestDTO from './dto/UpdateAddress.dto';
 import UpdateAddressCommand from '../service/dto/UpdateAddress.dto';
+import DeleteAddressRequestDTO from './dto/DeleteAddress.dto';
+import DeleteAddressCommand from '../service/dto/DeleteAddress.dto';
 
 @Controller('address')
 export class AddressController {
@@ -23,8 +25,21 @@ export class AddressController {
 
   @Patch()
   updateAddressRequest(@Body() updateAddressDto: UpdateAddressRequestDTO) {
-    const command = new UpdateAddressCommand(updateAddressDto.user_id, updateAddressDto.street_address, updateAddressDto.city, updateAddressDto.postal_code, updateAddressDto.details);
+    const command = new UpdateAddressCommand(
+      updateAddressDto.id,
+      updateAddressDto.user_id,
+      updateAddressDto.street_address, 
+      updateAddressDto.city, 
+      updateAddressDto.postal_code, 
+      updateAddressDto.details
+    );
     return this.addressService.UpdateAddress(command);
+  }
+
+  @Delete()
+  deleteAddressRequest(@Body() deleteAddressDto: DeleteAddressRequestDTO) {
+    const command = new DeleteAddressCommand(deleteAddressDto.user_id, deleteAddressDto.id);
+    return this.addressService.deleteAddress(command);
   }
   
 }
