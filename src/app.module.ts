@@ -11,9 +11,10 @@ import { LogisticsModule } from './logistics/logistics.module';
 import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminModule } from './admin/admin.module';
+import { CategoriesModule } from './commerce/categories/categories.module';
 
 @Module({
-  imports: [VendorModule, UserModule, CommerceModule, LogisticsModule, OrdersModule, PaymentsModule, AdminModule],
+  imports: [VendorModule, UserModule, CommerceModule, LogisticsModule, OrdersModule, PaymentsModule, AdminModule, CategoriesModule],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
 })

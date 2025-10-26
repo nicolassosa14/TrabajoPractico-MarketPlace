@@ -28,7 +28,15 @@ export class VendorService {
   async findById(id: number): Promise<Vendor | null> {
     const vendor = await this.vendorRepository.findById(id);
     if (!vendor) {
-      throw new NotFoundException(`Vendor with ID ${id} not found`);
+      throw new NotFoundException(`Vendor con  no encontrado`);
+    }
+    return vendor;
+  }
+
+  async findByEmail(email: string): Promise<Vendor | null> {
+    const vendor = await this.vendorRepository.findByEmail(email);
+    if (!vendor) {
+      throw new NotFoundException(`Vendor con email ${email} no encontrado`);
     }
     return vendor;
   }
