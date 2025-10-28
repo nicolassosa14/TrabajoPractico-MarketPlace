@@ -41,7 +41,8 @@ export class SupabaseUserRepository implements UserRepository {
         user_id: id,
         first_name: user.getFirst_Name(),
         last_name: user.getLast_Name(),
-        role: 'customer'
+        role: 'customer',
+        email: user.getEmail()
       });
       if (profileError){
           throw new Error('Error al crear perfil: ' + profileError.message);
@@ -62,7 +63,6 @@ export class SupabaseUserRepository implements UserRepository {
       .select('*')
       .eq('user_id', user_id)
       .single();
-
       if (error) {
         throw new Error('Perfil no encontrado: ' + error.message);
       }
@@ -79,6 +79,14 @@ export class SupabaseUserRepository implements UserRepository {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
 
+    return data;
+  }
+//ver como implementar bien
+  async VerificationStatus(email: string): Promise<any>{
+    let { data, error } = await this.supabaseClient.auth.getUser()
+    if(error){
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
     return data;
   }
 
@@ -129,8 +137,9 @@ export class SupabaseUserRepository implements UserRepository {
         email?: string;
         first_name?: string;
         last_name?: string;
-        phone_number?: number;
+        phone_number?: string;
     }>): Promise<any> {
+      console.log('updatePartialProfile called with id:', id, 'and partialUser:', partialUser);
         try {
             const { data: existingUser, error: searchError } = await this.supabaseClient
             .from('user_profiles')

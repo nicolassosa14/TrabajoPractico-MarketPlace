@@ -3,6 +3,10 @@ export default class UpdateAddressCommand {
 
     user_id: string;
 
+    lat: number;
+
+    long: number;
+
     street_address?: string;
 
     city?: string;

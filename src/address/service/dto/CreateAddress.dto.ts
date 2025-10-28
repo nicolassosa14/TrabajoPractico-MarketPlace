@@ -9,12 +9,18 @@ export default class CreateAddressCommand {
 
     private readonly details?: string;
 
-    public constructor(user_id: string, street_address: string, city: string, postal_code: string, details?: string) {
+    private readonly lat: number;
+
+    private readonly long: number;
+
+    public constructor(user_id: string, street_address: string, city: string, postal_code: string,lat: number, long: number, details?: string) {
         this.user_id = user_id;
         this.street_address = street_address;
         this.city = city;
         this.postal_code = postal_code;
         this.details = details;
+        this.lat = lat;
+        this.long = long;
     }
 
     getUser_id(): string {
@@ -31,5 +37,11 @@ export default class CreateAddressCommand {
     }
     getDetails(): string | undefined {
         return this.details;
+    }
+    getLat(): number {
+        return this.lat;
+    }
+    getLng(): number {
+        return this.long;
     }
 }

@@ -30,22 +30,18 @@ export class UserController {
   async resendVerificationEmailRequest(@Param('email') email: string) {
     return this.userService.resendVerificationEmail(email)
   }
+  @Get('/verification-status/:email')
+  async VerificationStatusRequest(@Param('email') email: string) {
+    return this.userService.VerificationStatus(email)
+  }
 
-  @Get('/profile')
-  async getUserProfileRequest(@Body() user_id: string) {
-    if (!user_id) {
-        throw new BadRequestException('Se requiere el ID del usuario');
-    }
+  @Get('/profile/:user_id')
+  async getUserProfileRequest(@Param('user_id') user_id: string) {
     return this.userService.getUserProfile(user_id);
   }
 
-
   @Patch('/profile')
   async EditUserInfoRequest(@Body() dto: PatchUserRequestDTO){
-
-    if (!dto.user_id) {
-        throw new BadRequestException('Se requiere el ID del usuario');
-    }
 
     // objeto solo con los campos que se enviaron
     const updateData: Partial<PatchUserRequestDTO> = {};
@@ -66,9 +62,9 @@ export class UserController {
     return this.userService.EditUserInfo(command)
   }
 
-  @Get('/profile-with-addresses')
-  async getUserProfileWithAddresses(@Body() dto: { user_id: string }) {
-    return this.userService.getUserWithAddresses(dto.user_id);
+  @Get('/profile-with-addresses/:user_id')
+  async getUserProfileWithAddresses(@Param('user_id') user_id: string ) {
+    return this.userService.getUserWithAddresses(user_id);
   }
 
 }

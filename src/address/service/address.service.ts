@@ -22,6 +22,8 @@ export class AddressService {
   UpdateAddress(dtoUpdate: UpdateAddressCommand) {
     const address = new Address(
       dtoUpdate.user_id,
+      dtoUpdate.lat,
+      dtoUpdate.long,
       dtoUpdate.postal_code,
       dtoUpdate.street_address,
       dtoUpdate.city,

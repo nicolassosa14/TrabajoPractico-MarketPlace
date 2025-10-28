@@ -1,6 +1,8 @@
 export default class Address{
     public constructor (
         private readonly user_id: string,
+        private readonly lat: number,
+        private readonly long: number,
         private readonly postal_code?: string,
         private readonly street_address?: string,
         private readonly city?: string,
@@ -29,6 +31,13 @@ export default class Address{
     public getDetails() : string | undefined
     {
         return this.details;
+    }
+    public getLat(): number {
+        return this.lat;
+    }
+
+    public getLng(): number {
+        return this.long;
     }
     
 }

@@ -4,7 +4,7 @@ export default class User{
         private readonly password: string,
         private readonly first_name?: string,
         private readonly last_name?: string,
-        private readonly phone_number?: number,
+        private readonly phone_number?: string,
         private readonly id?: number,
         private readonly uuid?: string,
     )
@@ -29,7 +29,7 @@ export default class User{
         return this.email;
     }
     
-    public getPhone() : number | undefined
+    public getPhone() : string | undefined
     {
         return this.phone_number;
     }

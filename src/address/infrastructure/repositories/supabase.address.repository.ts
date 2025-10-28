@@ -15,13 +15,23 @@ export class SupabaseAddressRepository implements AddressRepository {
         const verify = await this.VerifyExistAddressForUserIDandStreetAddress(address.getUser_id(), address.getStreet_address());
         
         if (verify) {
-            throw new BadRequestException('Ya existe esta direccion para este usuario');
+            throw new BadRequestException({
+                message: 'Ya existe esta dirección para este usuario',
+                code: 'ADDRESS_EXISTS',
+                hint: 'Intentá con una dirección diferente'
+            });
         }
-
-
         const { data, error } = await this.supabaseClient
             .from('addresses')
-            .insert({ user_id: address.getUser_id(), street_address: address.getStreet_address(), city: address.getCity(), postal_code: address.getPostal_code(), details: address?.getDetails() });
+            .insert({ 
+                user_id: address.getUser_id(),
+                street_address: address.getStreet_address(),
+                city: address.getCity(),
+                postal_code: address.getPostal_code(), 
+                latitude: address.getLat(),
+                longitude: address.getLng(),
+                details: address?.getDetails(),
+            });
         if (error) throw error;
         return "Dirección creada con éxito ";
     }

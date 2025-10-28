@@ -6,24 +6,6 @@ import {
   IsOptional,
 } from 'class-validator';
 
-export default class PutUserRequestDTO{
-  @IsOptional()
-  @IsString()
-  first_name: string;
-
-  @IsOptional()
-  @IsString()
-  last_name: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  phone_number?: number;
-}
-
 export class PatchUserRequestDTO{
     @IsOptional()
     @IsString()
@@ -39,8 +21,8 @@ export class PatchUserRequestDTO{
     email?: string;
 
     @IsOptional()
-    @IsNumber()
-    phone_number?: number;
+    @IsString()
+    phone_number?: string;
 
     @IsString()
     @IsNotEmpty({ message: 'El user_id es obligatorio' })

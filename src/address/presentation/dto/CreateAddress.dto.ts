@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
     IsString,
     IsNotEmpty,
@@ -6,6 +7,7 @@ import {
     IsUUID,
     IsOptional,
     MaxLength,
+    IsNumber,
 } from 'class-validator';
 
 export default class CreateAddressRequestDTO {
@@ -31,4 +33,14 @@ export default class CreateAddressRequestDTO {
     @IsString()
     @IsOptional()
     details?: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @Type(() => Number)
+    lat: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @Type(() => Number)
+    long: number;
 }

@@ -14,7 +14,18 @@ export class AddressController {
 
   @Post()
   createAddressRequest(@Body() createAddressDto: CreateAddressRequestDTO) {
-    const command = new CreateAddressCommand(createAddressDto.user_id, createAddressDto.street_address, createAddressDto.city, createAddressDto.postal_code, createAddressDto.details);
+    if (createAddressDto.details === '') {
+      createAddressDto.details = undefined;
+    }
+    const command = new CreateAddressCommand(
+      createAddressDto.user_id,
+      createAddressDto.street_address,
+      createAddressDto.city,
+      createAddressDto.postal_code,
+      createAddressDto.lat,
+      createAddressDto.long,
+      createAddressDto.details
+    );
     return this.addressService.createAddress(command);
   }
 
