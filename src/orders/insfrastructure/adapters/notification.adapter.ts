@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { NotificationService } from '../../../application/ports/notification.service';
+import { NotificationService } from '../../application/ports/notification.service';
 
 @Injectable()
 export class NotificationAdapter implements NotificationService {

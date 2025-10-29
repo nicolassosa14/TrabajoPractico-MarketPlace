@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { OrderRepository } from '../ports/order.repository';
 import { NotificationService } from '../ports/notification.service';
 import { OrderStatus } from '../../domain/value-objects/order-status.vo';
@@ -7,7 +7,10 @@ import { Order } from '../../domain/entities/order.entity';
 @Injectable()
 export class UpdateStatusService {
     constructor(
+        @Inject('OrderRepository')
         private readonly orderRepository: OrderRepository,
+
+        @Inject('NotificationService')
         private readonly notificationService: NotificationService,
     ) {}
 

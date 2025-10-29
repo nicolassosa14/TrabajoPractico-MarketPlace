@@ -1,4 +1,5 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { OrderStatus } from 'src/orders/domain/value-objects/order-status.vo';
 
 export class CreateOrderDto {
     @IsString()
@@ -24,4 +25,6 @@ export class CreateOrderDto {
 
     @IsNumber()
     totalAmount: number;
+
+    @IsEnum(OrderStatus) status: OrderStatus;
 }
