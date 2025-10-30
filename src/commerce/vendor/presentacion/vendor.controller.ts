@@ -5,20 +5,25 @@ import CreateVendorCommand from '../service/DTO/CreateVendorCommand.dto';
 import PutVendorRequestDTO, { PatchVendorRequestDTO } from './dto/UpdateVendorRequest.dto';
 import UpdatePatchVendorCommand, { UpdatePutVendorCommand } from '../service/DTO/UpdateVendorCommand.dto';
 
-@Controller('/vendor')
+@Controller('vendor')
 export class VendorController {
-    
-    constructor(private readonly vendorService: VendorService) {}
+
+    constructor(private readonly vendorService: VendorService) { }
 
     @Post()
     async create(@Body() dto: createVendorRequestDto) {
-        const command = new CreateVendorCommand(dto.name, dto.email, dto.password, dto.descripcion, dto.address);
+        const command = new CreateVendorCommand(dto.name, dto.description, dto.address, dto.user_id, dto.is_active);
         return this.vendorService.createVendor(command);
     }
 
     @Get(':id')
     async findById(@Param('id', ParseIntPipe) id: number) {
         return this.vendorService.findById(id);
+    }
+
+    @Get()
+    async findAll() {
+        return this.vendorService.findAll();
     }
 
     @Put(':id')

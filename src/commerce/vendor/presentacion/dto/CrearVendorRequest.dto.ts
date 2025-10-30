@@ -6,23 +6,20 @@ export class createVendorRequestDto {
     name: string;
 
 
-    @IsEmail()
-    @IsNotEmpty() 
-    email: string;
-
     @IsString()
     @IsNotEmpty() 
-    descripcion: string;
+    description: string;
 
     @IsString()
     @IsNotEmpty() 
     address: string;
 
-    @IsString()
-    @IsNotEmpty() 
-    password: string;
 
     @IsNumber()
     @Max(1)
-    is_active: number;
+    is_active: boolean;
+
+    @IsString()
+    @IsNotEmpty() 
+    user_id: string;
 }

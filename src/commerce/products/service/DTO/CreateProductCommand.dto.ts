@@ -4,7 +4,7 @@ export default class CreateProductCommandDTO {
     public readonly price: number;
     public readonly image_url: string;
     public readonly is_available: boolean = true;
-    public readonly vendor_id : number;
+    public readonly vendor_id : string;
     public readonly category_ids: number[];
 
     getName(): string {
@@ -22,7 +22,7 @@ export default class CreateProductCommandDTO {
     getIsAvailable(): boolean {
         return this.is_available;
     }
-    getVendorId(): number {
+    getVendorId(): string {
         return this.vendor_id;
     }
     getCategoryIds() : number[]  {
@@ -35,7 +35,7 @@ export default class CreateProductCommandDTO {
         price: number,
         image_url: string,
         is_available: boolean,
-        vendor_id : number,
+        vendor_id : string,
         category_ids?: number[],
     ) {
             this.name = name,

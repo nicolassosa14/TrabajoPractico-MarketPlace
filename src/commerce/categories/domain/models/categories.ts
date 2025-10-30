@@ -2,7 +2,9 @@ export default class categories {
     public constructor(
         private readonly name: string,
         private readonly description : string,
+         private readonly user_id: string,
         private readonly id?: number,
+        
 
     ){
         
@@ -18,5 +20,9 @@ export default class categories {
 
     public getDescription() : string {
         return this.description
+    }
+
+    public getUserId(){
+        return this.user_id
     }
 }

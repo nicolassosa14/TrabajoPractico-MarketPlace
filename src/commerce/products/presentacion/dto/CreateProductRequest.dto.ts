@@ -23,4 +23,8 @@ export class CreateProductRequestDTO {
     @IsArray()
     @IsNotEmpty({ each: true })
     category_ids: number[];
+
+    @IsString()
+    @IsNotEmpty()
+    vendor_id: string;
 }

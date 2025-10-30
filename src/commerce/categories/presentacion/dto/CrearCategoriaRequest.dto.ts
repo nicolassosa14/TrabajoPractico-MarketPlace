@@ -8,4 +8,8 @@ export class CreateCategoryRequestDto {
     @IsNotEmpty()
     @IsString()
     description: string;
+
+    @IsString()
+    @IsNotEmpty() 
+    user_id: string;
 }

@@ -23,17 +23,17 @@ export class ProductsService {
       dto.getImageUrl(),
       dto.getPrice(),
       dto.getIsAvailable(),
-      String(dto.getVendorId()),
+      dto.getVendorId(),
     );
     const createdProduct = await this.productRepository.createProduct(product);
 
 
-    const productId = createdProduct.getId();
-    const categoryIds = dto.getCategoryIds();
-
-    if (productId && categoryIds && categoryIds.length > 0) {
-      await this.productRepository.assignCategories(productId, categoryIds);
-    }
+    /* const productId = createdProduct.getId();
+     const categoryIds = dto.getCategoryIds();
+ 
+     if (productId && categoryIds && categoryIds.length > 0) {
+       await this.productRepository.assignCategories(productId, categoryIds);
+     }*/
 
     return createdProduct;
   }

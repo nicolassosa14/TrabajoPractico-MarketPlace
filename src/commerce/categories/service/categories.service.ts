@@ -15,6 +15,7 @@ export class CategoriesService {
     const categoria = new categories(
       dto.name,
       dto.description,
+      dto.user_id,
     )
     return this.categoriesRepository.createcategories(categoria)
   }

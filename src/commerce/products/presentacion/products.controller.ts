@@ -3,7 +3,6 @@ import { ProductsService } from '../service/products.service';
 import { CreateProductRequestDTO } from '../presentacion/dto/CreateProductRequest.dto';
 import { UpdateProductDto } from './dto/UpdateProductRequest.dto';
 import CreateProductCommandDTO from '../service/DTO/CreateProductCommand.dto';
-import { Req } from '@nestjs/common';
 
 
 @Controller('products')
@@ -12,17 +11,15 @@ export class ProductsController {
 
   // POST /products
   @Post()
-  //@UseGuards(AuthGuard('jwt'))
-  create(@Body() dto: CreateProductRequestDTO, @Req() req) {
-    const vendorId = req.user.id;
 
+  create(@Body() dto: CreateProductRequestDTO) {
     const command = new CreateProductCommandDTO(
       dto.name,
       dto.description,
       dto.price,
       dto.image_url,
       dto.is_available ?? true,
-      vendorId,
+      dto.vendor_id,
       dto.category_ids,
     );
     return this.productsService.createProduct(command);

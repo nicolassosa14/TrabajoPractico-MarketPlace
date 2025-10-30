@@ -1,52 +1,38 @@
 export default class Vendor {
-    public constructor (
-        private readonly email: string,
-        private readonly password: string,
-        private readonly descripcion: string,
-        private readonly adress: string,
+    public constructor(
+        private readonly description: string,
+        private readonly address: string,
         private readonly is_active: boolean = true,
+        private readonly user_id: string,
         private readonly name?: string,
-        private readonly id?: number,
-        private readonly uuid?: string,
+        private readonly id?: number
 
-    )
-    {
+    ) {
     }
 
-    public getEmail() : string
-    {
-        return this.email;
-    }
-    
-     public getPassword() : string{
-        return this.password
+
+    public getDescription(): string {
+        return this.description;
     }
 
-    public getDescripcion() : string {
-        return this.descripcion;
+    public getAddress(): string {
+        return this.address;
     }
 
-    public getAdress() : string {
-        return this.adress;
-    }
 
- 
-    public getisActive() : boolean {
+    public getisActive(): boolean {
         return this.is_active;
     }
 
-    public getName() : string | undefined
-    {
+    public getName(): string | undefined {
         return this.name;
     }
 
-    public getId() : number | undefined
-    {
+    public getId(): number | undefined {
         return this.id;
     }
-    public getUuid() : string | undefined
-    {
-        return this.uuid;
+    public getUserId(): string {
+        return this.user_id;
     }
 
 }
