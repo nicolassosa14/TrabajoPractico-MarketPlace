@@ -10,7 +10,7 @@ export class SupabaseLogisticRepository implements LogisticRepository {
     constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseClient: SupabaseClient) {}
 
     async createLogistic(logistic : Logistic) {
-        const verifyExistLogistic = await this.VerifyExistLogisticForUserID(logistic.getUser_id());
+        const verifyExistLogistic = await this.VerifyExistLogisticForUserID(logistic.getUser_id(), logistic.getLicense_plate());
         
         if (verifyExistLogistic) {
             throw new BadRequestException('Ya existe este logistic para este driver');
@@ -37,11 +37,12 @@ export class SupabaseLogisticRepository implements LogisticRepository {
         return "Logistic creado con éxito ";
     }
     // Verifica si ya existe un logistic para el user_id dado
-    async VerifyExistLogisticForUserID(user_id:string): Promise<boolean> {
+    async VerifyExistLogisticForUserID(user_id:string, license_plate:string): Promise<boolean> {
         const { data, error } = await this.supabaseClient
             .from('drivers_details')
             .select('*')
-            .eq('user_id', user_id);
+            .eq('user_id', user_id)
+            .eq('license_plate', license_plate);
         if (error) throw new BadRequestException('Error al verificar el logistic: ' + error.message);
         return data && data.length > 0;
     }
@@ -75,7 +76,7 @@ export class SupabaseLogisticRepository implements LogisticRepository {
         if (error) throw new BadRequestException('Error al actualizar el estado del logistic: ' + error.message);
         return "Estado del logistic actualizado con éxito ";
     }
-    
+
     async findAllLogisticByUserID(user_id:string): Promise<Logistic[]> {
         const { data, error } = await this.supabaseClient
             .from('drivers_details')
