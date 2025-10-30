@@ -75,6 +75,15 @@ export class SupabaseLogisticRepository implements LogisticRepository {
         if (error) throw new BadRequestException('Error al actualizar el estado del logistic: ' + error.message);
         return "Estado del logistic actualizado con éxito ";
     }
+    
+    async findAllLogisticByUserID(user_id:string): Promise<Logistic[]> {
+        const { data, error } = await this.supabaseClient
+            .from('drivers_details')
+            .select('*')
+            .eq('user_id', user_id);
+        if (error) throw new BadRequestException('Error al obtener los logistics del usuario: ' + error.message);
+        return data;
+    }
 
 
 

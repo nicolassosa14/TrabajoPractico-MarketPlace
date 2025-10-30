@@ -17,6 +17,7 @@ export class AddressController {
     if (createAddressDto.details === '') {
       createAddressDto.details = undefined;
     }
+    console.log("Received CreateAddressRequestDTO:", createAddressDto);
     const command = new CreateAddressCommand(
       createAddressDto.user_id,
       createAddressDto.street_address,

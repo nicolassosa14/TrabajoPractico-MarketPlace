@@ -31,8 +31,8 @@ export class LogisticsService {
     return this.logisticRepository.UpdateStatusLogisticByID(updateStatusLogisticDto.getId(), updateStatusLogisticDto.getUser_id(), updateStatusLogisticDto.getIs_available());
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} logistic`;
+  findAllByUserID(user_id: string) {
+    return this.logisticRepository.findAllLogisticByUserID(user_id);
   }
 
   update(id: number, updateLogisticDto: UpdateLogisticCommand) {

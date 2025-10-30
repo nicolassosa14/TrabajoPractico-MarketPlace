@@ -33,9 +33,9 @@ export class LogisticsController {
     return this.logisticsService.UpdateStatus(command);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.logisticsService.findOne(+id);
+  @Get(':user_id')
+  findAllByUserID(@Param('user_id') user_id: string) {
+    return this.logisticsService.findAllByUserID(user_id);
   }
 
   @Patch(':id')
