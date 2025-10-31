@@ -21,11 +21,11 @@ export class SupabaseVendorRepository implements VendorRepository {
             throw new Error('El usuario ya tiene un vendor asociado.');
         }
 
-        
+
         const { data: profileData, error: profileError } = await this.supabaseClient
-            .from('profiles') 
+            .from('user_profiles')
             .select('role')
-            .eq('id', vendor.getUserId()) 
+            .eq('id', vendor.getUserId())
             .single();
 
         if (profileError || !profileData || profileData.role !== 'vendor') {

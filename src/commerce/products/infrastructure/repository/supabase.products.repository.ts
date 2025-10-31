@@ -8,30 +8,48 @@ export class SupabaseProductRepository implements ProductRepository {
     constructor(@Inject('SUPABASE_CLIENT') private readonly supabase: SupabaseClient) { }
 
     async createProduct(product: Product): Promise<Product> {
-        const { data, error } = await this.supabase
+        const userId = product.getVendorId(); 
+
+        const { data: profileData, error: profileError } = await this.supabase
+            .from('user_profiles')
+            .select('role')
+            .eq('user_id', userId)
+            .single();
+
+        if (profileError || !profileData || profileData.role !== 'vendor') {
+            throw new Error('Acción no permitida. El usuario asociado al vendor no tiene el rol correcto.');
+        }
+
+      
+        const { data: vendorData, error: vendorError } = await this.supabase
+            .from('vendors')
+            .select('id')
+            .eq('user_id', userId)
+            .single();
+
+        if (vendorError || !vendorData) {
+            throw new Error('El vendor especificado no existe para este usuario.');
+        }
+
+     
+        const { data: productData, error: productError } = await this.supabase
             .from('products')
-            .insert([{
-                vendor_id: product.getVendorId(),
+            .insert({
                 name: product.getName(),
                 description: product.getDescription(),
-                price: product.getPrice(),
                 image_url: product.getImageUrl(),
-                is_available: product.getIsAvailable()
-            }])
+                price: product.getPrice(),
+                is_available: product.getIsAvailable(),
+                vendor_id: vendorData.id // ¡Este es el ID de la tabla 'vendors'!
+            })
             .select()
             .single();
 
-        if (error) throw new Error(error.message);
-        // Mapea el objeto plano de la base de datos a una instancia del modelo de dominio
-        return new Product(
-            data.name,
-            data.description,
-            data.image_url,
-            data.price,
-            data.is_available,
-            data.vendor_id,
-            data.id,
-        );
+        if (productError) {
+            throw new Error('Error al crear el producto: ' + productError.message);
+        }
+
+        return new Product(productData.name, productData.description, productData.image_url, productData.price, productData.is_available, productData.vendor_id, productData.id);
     }
 
     async findById(id: number): Promise<Product | null> {
@@ -41,9 +59,9 @@ export class SupabaseProductRepository implements ProductRepository {
             .eq('id', id)
             .single();
 
-        if (error && error.code !== 'PGRST116') throw new Error(error.message); // PGRST116 = no rows
+        if (error && error.code !== 'PGRST116') throw new Error(error.message); // PGRST116 = no hay filas coincidentes
         if (!data) return null;
-        // Mapea el objeto plano a una instancia del modelo
+
         return new Product(
             data.name,
             data.description,
@@ -169,7 +187,7 @@ export class SupabaseProductRepository implements ProductRepository {
     }
 
     async assignCategories(productId: number, categoryIds: number[]): Promise<void> {
-       
+
         const { error } = await this.supabase.rpc('assign_product_categories', {
             p_product_id: productId,
             p_category_ids: categoryIds,
