@@ -8,12 +8,12 @@ async function bootstrap() {
   //  activamos validación automática para todos los endpoints
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // elimina campos no definidos en el DTO
-      forbidNonWhitelisted: true, // lanza error si llegan campos extras
-      transform: true, // convierte tipos automáticamente (por ejemplo, strings a numbers)
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
