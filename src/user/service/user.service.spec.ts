@@ -11,7 +11,12 @@ import User from '../domain/models/user';
 describe('UserService', () => {
   let service: UserService;
   let userRepository: jest.Mocked<UserRepository>;
-  let addressService: jest.Mocked<AddressService>;
+  let addressService: {
+    createAddress: jest.Mock;
+    findAllAddressByUserID: jest.Mock;
+    UpdateAddress: jest.Mock;
+    deleteAddress: jest.Mock;
+  };
 
   const mockUserRepository = {
     createUser: jest.fn(),
@@ -35,6 +40,7 @@ describe('UserService', () => {
     createAddress: jest.fn(),
     findAllAddressByUserID: jest.fn(),
     UpdateAddress: jest.fn(),
+    deleteAddress: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -54,7 +60,7 @@ describe('UserService', () => {
 
     service = module.get<UserService>(UserService);
     userRepository = module.get('UserRepository');
-    addressService = module.get<AddressService>(AddressService);
+    addressService = mockAddressService;
 
     // Limpiar mocks antes de cada test
     jest.clearAllMocks();
@@ -286,7 +292,7 @@ describe('UserService', () => {
         'Jane',
         'Smith',
         'jane@example.com',
-        1234567890,
+        '1234567890',
       );
 
       const mockUpdatedUser = {
@@ -295,7 +301,7 @@ describe('UserService', () => {
         first_name: 'Jane',
         last_name: 'Smith',
         email: 'jane@example.com',
-        phone_number: 1234567890,
+        phone_number: '1234567890',
       };
 
       mockUserRepository.updatePartialProfile.mockResolvedValue(
@@ -311,7 +317,7 @@ describe('UserService', () => {
           first_name: 'Jane',
           last_name: 'Smith',
           email: 'jane@example.com',
-          phone_number: 1234567890,
+          phone_number: '1234567890',
         },
       );
     });
@@ -343,7 +349,7 @@ describe('UserService', () => {
         undefined,
         undefined,
         'newemail@example.com',
-        9876543210,
+        '9876543210',
       );
 
       mockUserRepository.updatePartialProfile.mockResolvedValue({});
@@ -354,7 +360,7 @@ describe('UserService', () => {
         'uuid-123',
         {
           email: 'newemail@example.com',
-          phone_number: 9876543210,
+          phone_number: '9876543210',
         },
       );
     });
@@ -387,7 +393,7 @@ describe('UserService', () => {
       ];
 
       mockUserRepository.getUserProfile.mockResolvedValue(mockProfile);
-      mockAddressService.findAllAddressByUserID.mockResolvedValue(
+      addressService.findAllAddressByUserID.mockResolvedValue(
         mockAddresses,
       );
 
@@ -398,7 +404,7 @@ describe('UserService', () => {
         addresses: mockAddresses,
       });
       expect(mockUserRepository.getUserProfile).toHaveBeenCalledWith(userId);
-      expect(mockAddressService.findAllAddressByUserID).toHaveBeenCalledWith(
+      expect(addressService.findAllAddressByUserID).toHaveBeenCalledWith(
         userId,
       );
     });
@@ -413,13 +419,13 @@ describe('UserService', () => {
       const userId = 'uuid-123';
 
       mockUserRepository.getUserProfile.mockResolvedValue({ id: 1 });
-      mockAddressService.findAllAddressByUserID.mockResolvedValue([]);
+      addressService.findAllAddressByUserID.mockResolvedValue([]);
 
       await service.getUserWithAddresses(userId);
 
       // Verificar que ambos se llamaron
       expect(mockUserRepository.getUserProfile).toHaveBeenCalled();
-      expect(mockAddressService.findAllAddressByUserID).toHaveBeenCalled();
+      expect(addressService.findAllAddressByUserID).toHaveBeenCalled();
     });
 
     it('should handle case when user has no addresses', async () => {
@@ -427,7 +433,7 @@ describe('UserService', () => {
       const mockProfile = { id: 1, user_id: userId };
 
       mockUserRepository.getUserProfile.mockResolvedValue(mockProfile);
-      mockAddressService.findAllAddressByUserID.mockResolvedValue([]);
+      addressService.findAllAddressByUserID.mockResolvedValue([]);
 
       const result = await service.getUserWithAddresses(userId);
 

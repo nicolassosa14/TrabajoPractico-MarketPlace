@@ -233,7 +233,7 @@ describe('UserController', () => {
         email: 'newemail@example.com',
         first_name: 'Jane',
         last_name: 'Smith',
-        phone_number: 1234567890,
+        phone_number: '1234567890',
       };
 
       const mockResponse = {
@@ -242,7 +242,7 @@ describe('UserController', () => {
         email: 'newemail@example.com',
         first_name: 'Jane',
         last_name: 'Smith',
-        phone_number: 1234567890,
+        phone_number: '1234567890',
       };
 
       mockUserService.EditUserInfo.mockResolvedValue(mockResponse);
@@ -289,7 +289,7 @@ describe('UserController', () => {
       const dto: PatchUserRequestDTO = {
         user_id: 'uuid-123',
         email: 'newemail@example.com',
-        phone_number: 9876543210,
+        phone_number: '9876543210',
         // first_name y last_name son undefined
       };
 
@@ -321,7 +321,7 @@ describe('UserController', () => {
 
       mockUserService.getUserWithAddresses.mockResolvedValue(mockResponse);
 
-      const result = await controller.getUserProfileWithAddresses(dto);
+      const result = await controller.getUserProfileWithAddresses(dto.user_id);
 
       expect(result).toEqual(mockResponse);
       expect(mockUserService.getUserWithAddresses).toHaveBeenCalledWith(
@@ -339,7 +339,7 @@ describe('UserController', () => {
 
       mockUserService.getUserWithAddresses.mockResolvedValue(mockResponse);
 
-      const result = await controller.getUserProfileWithAddresses(dto);
+      const result = await controller.getUserProfileWithAddresses(dto.user_id);
 
       expect(result.addresses).toEqual([]);
     });
