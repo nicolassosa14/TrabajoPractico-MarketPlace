@@ -101,8 +101,7 @@ export class SupabaseUserRepository implements UserRepository {
     }
     return data;
   }
- 
-  //VER
+
   async deleteUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
@@ -133,19 +132,18 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-  async updatePartialProfile(id: string, partialUser: Partial<{
-        email?: string;
-        first_name?: string;
-        last_name?: string;
-        phone_number?: string;
-    }>): Promise<any> {
-      console.log('updatePartialProfile called with id:', id, 'and partialUser:', partialUser);
-        try {
-            const { data: existingUser, error: searchError } = await this.supabaseClient
-            .from('user_profiles')
-            .select('*')
-            .eq('user_id', id)
-            .single();
+
+  async patchUser(command: UpdatePatchUserCommand): Promise<any> {
+    const updateData: any = {};
+    if (command.getName()) updateData.name = command.getName();
+    if (command.getEmail()) updateData.email = command.getEmail();
+    if (command.getPhone()) updateData.phone = command.getPhone();
+
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .update(updateData)
+      .eq('id', command.getId())
+      .select();
 
             if (searchError || !existingUser) {
                 throw new Error(`Usuario no encontrado con ID: ${id}`);
