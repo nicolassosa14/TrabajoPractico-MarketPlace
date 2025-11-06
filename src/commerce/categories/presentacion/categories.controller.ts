@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CategoriesService } from '../service/categories.service';
 import { CreateCategoryRequestDto } from './dto/CrearCategoriaRequest.dto';
 import { UpdateCategoryRequestDto } from './dto/UpdateCategoryRequest.dto';
@@ -23,22 +14,25 @@ export class CategoriesController {
     const command = new CreateCategoriesCommand(
       dto.name,
       dto.description,
-      dto.user_id,
-    );
+      dto.user_id
+    )
     return this.categoriesService.createCategory(command);
   }
 
   @Get()
-  findAll(@Query('name') name?: string) {
+  findAll(@Query('name') name?:string) {
     return this.categoriesService.findAll(name);
   }
 
   @Patch(':id')
-  async updateCategories(
-    @Param('id') id: number,
-    @Body() dto: UpdateCategoryRequestDto,
-  ) {
-    const command = new UpdateCategoryCommand(id, dto.name, dto.description);
-    return this.categoriesService.update(id, command);
-  }
+    async updateCategories(
+        @Param('id') id: number,
+        @Body() dto: UpdateCategoryRequestDto
+    ) {
+        const command = new UpdateCategoryCommand(
+          id, dto.name, dto.description);
+        return this.categoriesService.update(id, command
+        )
+    }
+
 }
