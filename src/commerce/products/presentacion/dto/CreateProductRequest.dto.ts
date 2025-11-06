@@ -1,37 +1,30 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
-  IsBoolean,
-  IsOptional,
-  IsArray,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional, IsArray } from "class-validator";
 
 export class CreateProductRequestDTO {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  description: string;
+    @IsString()
+    @IsNotEmpty()
+    description: string;
 
-  @IsNumber()
-  price: number;
+    @IsNumber()
+    price: number;
 
-  @IsString()
-  @IsNotEmpty()
-  image_url: string;
+    @IsString()
+    @IsNotEmpty()
+    image_url: string;
 
-  @IsBoolean()
-  @IsOptional()
-  is_available?: boolean;
+    @IsBoolean()
+    @IsOptional()
+    is_available?: boolean;
 
-  @IsArray()
-  @IsNotEmpty({ each: true })
-  category_ids: number[];
+    @IsString()
+    @IsNotEmpty()
+    vendor_id: string;
 
-  @IsString()
-  @IsNotEmpty()
-  vendor_id: string;
+    @IsString()
+    @IsNotEmpty()
+    category_ids: string;
 }

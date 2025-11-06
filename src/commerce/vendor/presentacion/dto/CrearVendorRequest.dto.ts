@@ -1,23 +1,25 @@
-import { IsString, IsNotEmpty, IsNumber, Max, IsEmail } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, Max, IsEmail } from "class-validator";
 
 export class createVendorRequestDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+    @IsString()
+    @IsNotEmpty() 
+    name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  address: string;
+    @IsString()
+    @IsNotEmpty() 
+    description: string;
 
-  @IsNumber()
-  @Max(1)
-  is_active: boolean;
+    @IsString()
+    @IsNotEmpty() 
+    address: string;
 
-  @IsString()
-  @IsNotEmpty()
-  user_id: string;
+
+    @IsNumber()
+    @Max(1)
+    is_active: boolean;
+
+    @IsString()
+    @IsNotEmpty() 
+    user_id: string;
 }

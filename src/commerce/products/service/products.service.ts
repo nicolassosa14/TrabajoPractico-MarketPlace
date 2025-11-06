@@ -7,13 +7,14 @@ import type { ProductRepository } from '../domain/contract/products.respository'
 import { NotFoundException } from '@nestjs/common';
 import type { ProductCategoryRepository } from 'src/commerce/product_category/contract/Product_category.repository';
 @Injectable()
+
 export class ProductsService {
   constructor(
     @Inject('ProductRepository')
     private readonly productRepository: ProductRepository,
     @Inject('ProductCategoryRepository')
     private readonly productCategoryRepository: ProductCategoryRepository,
-  ) {}
+  ) { }
 
   async createProduct(dto: CreateProductCommandDTO) {
     const product = new Product(
@@ -22,9 +23,11 @@ export class ProductsService {
       dto.getImageUrl(),
       dto.getPrice(),
       dto.getIsAvailable(),
+      dto.getCategoryIds(),
       dto.getVendorId(),
     );
     const createdProduct = await this.productRepository.createProduct(product);
+
 
     /* const productId = createdProduct.getId();
      const categoryIds = dto.getCategoryIds();
@@ -51,6 +54,11 @@ export class ProductsService {
     return product;
   }
 
+  async findByCategoryName(categoryName: string) {
+    return this.productRepository.findByCategoryName(categoryName);
+  }
+
+
   async update(id: number, updateProductDto: UpdateProductDto) {
     const existingProduct = await this.findOne(id); // Asegura que el producto existe y obtiene sus datos
 
@@ -61,15 +69,13 @@ export class ProductsService {
       updateProductDto.price ?? existingProduct.getPrice(),
       updateProductDto.is_available ?? existingProduct.getIsAvailable(),
       existingProduct.getVendorId(),
+      existingProduct.getCategoryIds(),
       id,
     );
 
     const updatedProduct = await this.productRepository.update(productToUpdate);
     if (updateProductDto.category_ids) {
-      await this.productRepository.assignCategories(
-        id,
-        updateProductDto.category_ids,
-      );
+      await this.productRepository.assignCategories(id, updateProductDto.category_ids);
     }
     return updatedProduct;
   }
@@ -80,25 +86,16 @@ export class ProductsService {
     return { message: 'Product eliminado' };
   }
 
-  async createProductAndAssignCategories(
-    product: Product,
-    categoryIds: number[],
-  ) {
+  async createProductAndAssignCategories(product: Product, categoryIds: number[]) {
     const created = await this.productRepository.createProduct(product);
     const productId = (created as any).id ?? (created as any).getId?.();
     if (categoryIds && categoryIds.length > 0) {
-      await this.productCategoryRepository.assignCategories(
-        productId,
-        categoryIds,
-      );
+      await this.productCategoryRepository.assignCategories(productId, categoryIds);
     }
     return created;
   }
 
-  async updateProductCategories(
-    productId: number | string,
-    categoryIds: number[],
-  ) {
+  async updateProductCategories(productId: number | string, categoryIds: number[]) {
     await this.productCategoryRepository.syncCategories(productId, categoryIds);
   }
 
