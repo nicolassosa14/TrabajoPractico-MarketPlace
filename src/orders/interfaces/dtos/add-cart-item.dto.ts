@@ -1,12 +1,12 @@
-import {  IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class AddCartItemDto {
-    @IsString()
-    userId: string;
+  @IsString()
+  userId: string;
 
-    @IsString()
-    productId: string;
+  @IsString()
+  productId: string;
 
-    @IsNumber()
-    quantity: number;
+  @IsNumber()
+  quantity: number;
 }

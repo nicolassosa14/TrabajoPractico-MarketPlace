@@ -13,58 +13,57 @@ import { AddOrderItemDto } from './dtos/add-order-item.dto';
 import { UpdateStatusDto } from './dtos/update-status.dto';
 
 @Controller('orders')
-    export class OrdersController {
-        constructor(
-        private readonly createOrder: CreateOrderService,
-        private readonly getOrders: GetOrdersService,
-        private readonly updateStatus: UpdateStatusService,
-        private readonly addCartItem: AddCartItemService,
-        private readonly getCart: GetCartService,
-        private readonly clearCart: ClearCartService,
-        private readonly addOrderItem: AddOrderItemService,
-        private readonly getOrderItems: GetOrderItemsService,
-    ) {}
+export class OrdersController {
+  constructor(
+    private readonly createOrder: CreateOrderService,
+    private readonly getOrders: GetOrdersService,
+    private readonly updateStatus: UpdateStatusService,
+    private readonly addCartItem: AddCartItemService,
+    private readonly getCart: GetCartService,
+    private readonly clearCart: ClearCartService,
+    private readonly addOrderItem: AddOrderItemService,
+    private readonly getOrderItems: GetOrderItemsService,
+  ) {}
 
-    @Post()
-    create(@Body() dto: CreateOrderDto) {
-        return this.createOrder.execute(dto as any);
-    }
+  @Post()
+  create(@Body() dto: CreateOrderDto) {
+    return this.createOrder.execute(dto as any);
+  }
 
-    @Get()
-    findAll() {
-        return this.getOrders.execute();
-    }
+  @Get()
+  findAll() {
+    return this.getOrders.execute();
+  }
 
-    @Patch(':id/status')
-    update(@Param('id') id: string, @Body() dto: UpdateStatusDto) {
-        return this.updateStatus.execute(id, dto.status);
-    }
+  @Patch(':id/status')
+  update(@Param('id') id: string, @Body() dto: UpdateStatusDto) {
+    return this.updateStatus.execute(id, dto.status);
+  }
 
-    // ----- CART -----
-    @Post('cart')
-    addToCart(@Body() dto: AddCartItemDto) {
-        return this.addCartItem.execute({ ...dto, addedAt: new Date() } as any);
-    }
+  // ----- CART -----
+  @Post('cart')
+  addToCart(@Body() dto: AddCartItemDto) {
+    return this.addCartItem.execute({ ...dto, addedAt: new Date() } as any);
+  }
 
-    @Get('cart/:userId')
-    getCartItems(@Param('userId') userId: string) {
-        return this.getCart.execute(userId);
-    }
+  @Get('cart/:userId')
+  getCartItems(@Param('userId') userId: string) {
+    return this.getCart.execute(userId);
+  }
 
-    @Patch('cart/clear/:userId')
-    clearCartItems(@Param('userId') userId: string) {
-        return this.clearCart.execute(userId);
-    }
+  @Patch('cart/clear/:userId')
+  clearCartItems(@Param('userId') userId: string) {
+    return this.clearCart.execute(userId);
+  }
 
-    // ----- ORDER ITEMS -----
-    @Post('items')
-    addItem(@Body() dto: AddOrderItemDto) {
-        return this.addOrderItem.execute(dto as any);
-    }
+  // ----- ORDER ITEMS -----
+  @Post('items')
+  addItem(@Body() dto: AddOrderItemDto) {
+    return this.addOrderItem.execute(dto as any);
+  }
 
-    @Get('items/:orderId')
-    getItems(@Param('orderId') orderId: string) {
-        return this.getOrderItems.execute(orderId);
-    }
+  @Get('items/:orderId')
+  getItems(@Param('orderId') orderId: string) {
+    return this.getOrderItems.execute(orderId);
+  }
 }
-

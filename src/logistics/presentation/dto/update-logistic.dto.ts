@@ -1,3 +1,1 @@
-export class UpdateLogisticRequestDTO {
-
-}
+export class UpdateLogisticRequestDTO {}

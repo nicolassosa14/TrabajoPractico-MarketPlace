@@ -8,16 +8,16 @@ import { UpdateStatusLogisticCommand } from './dto/update-status.dto';
 @Injectable()
 export class LogisticsService {
   constructor(
-      @Inject('LogisticRepository') private readonly logisticRepository: LogisticRepository,
-    ) {}
+    @Inject('LogisticRepository')
+    private readonly logisticRepository: LogisticRepository,
+  ) {}
 
   CreateLogistic(createLogisticDto: CreateLogisticCommand) {
-
     const logistic = new Logistic(
       createLogisticDto.getUser_id(),
       createLogisticDto.getVehicle_type(),
       createLogisticDto.getLicense_plate(),
-      createLogisticDto.getIs_available()
+      createLogisticDto.getIs_available(),
     );
 
     return this.logisticRepository.createLogistic(logistic);
@@ -28,7 +28,11 @@ export class LogisticsService {
   }
 
   UpdateStatus(updateStatusLogisticDto: UpdateStatusLogisticCommand) {
-    return this.logisticRepository.UpdateStatusLogisticByID(updateStatusLogisticDto.getId(), updateStatusLogisticDto.getUser_id(), updateStatusLogisticDto.getIs_available());
+    return this.logisticRepository.UpdateStatusLogisticByID(
+      updateStatusLogisticDto.getId(),
+      updateStatusLogisticDto.getUser_id(),
+      updateStatusLogisticDto.getIs_available(),
+    );
   }
 
   findAllByUserID(user_id: string) {

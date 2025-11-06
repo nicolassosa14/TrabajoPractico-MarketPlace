@@ -1,57 +1,56 @@
 import {
-    IsEmail,
-    IsNotEmpty,
-    IsBoolean,
-    IsNumber,
-    IsOptional,
-    IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
-
-export default class PutVendorRequestDTO{
-    @IsString()
-    @IsNotEmpty()
-    name: string;
-    @IsEmail()
-    @IsNotEmpty()
-    email: string;
-    @IsString()
-    @IsNotEmpty()
-    password: string;
-    @IsString()
-    @IsNotEmpty()
-    descripcion: string;
-    @IsString()
-    @IsNotEmpty()
-    address: string;
-    @IsBoolean()
-    @IsNotEmpty()
-    is_active: boolean;
+export default class PutVendorRequestDTO {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+  @IsString()
+  @IsNotEmpty()
+  descripcion: string;
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+  @IsBoolean()
+  @IsNotEmpty()
+  is_active: boolean;
 }
 
-export class PatchVendorRequestDTO{
-    @IsOptional()
-    @IsString()
-    name?: string;
+export class PatchVendorRequestDTO {
+  @IsOptional()
+  @IsString()
+  name?: string;
 
-    @IsOptional()
-    @IsEmail()
-    email?: string;
+  @IsOptional()
+  @IsEmail()
+  email?: string;
 
-    @IsOptional()
-    @IsString()
-    password?: string;
+  @IsOptional()
+  @IsString()
+  password?: string;
 
-    @IsOptional()
-    @IsString()
-    descripcion?: string;
+  @IsOptional()
+  @IsString()
+  descripcion?: string;
 
-    @IsOptional()
-    @IsString()
-    address?: string;
+  @IsOptional()
+  @IsString()
+  address?: string;
 
-    @IsOptional()
-    @IsBoolean()
-    @IsNotEmpty()
-    is_active?: boolean;
+  @IsOptional()
+  @IsBoolean()
+  @IsNotEmpty()
+  is_active?: boolean;
 }

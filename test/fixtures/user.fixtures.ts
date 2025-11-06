@@ -70,10 +70,7 @@ export const createValidUserCommand = (): CreateUserCommand => {
 };
 
 export const createValidLoginCommand = (): LoginUserCommand => {
-  return new LoginUserCommand(
-    validUserData.email,
-    validUserData.password,
-  );
+  return new LoginUserCommand(validUserData.email, validUserData.password);
 };
 
 export const mockUserUUID = '123e4567-e89b-12d3-a456-426614174000';

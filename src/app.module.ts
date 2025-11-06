@@ -14,7 +14,16 @@ import { AdminModule } from './admin/admin.module';
 import { AddressModule } from './address/address.module';
 
 @Module({
-  imports: [VendorModule, UserModule, CommerceModule, LogisticsModule, OrdersModule, PaymentsModule, AdminModule, AddressModule],
+  imports: [
+    VendorModule,
+    UserModule,
+    CommerceModule,
+    LogisticsModule,
+    OrdersModule,
+    PaymentsModule,
+    AdminModule,
+    AddressModule,
+  ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
 })

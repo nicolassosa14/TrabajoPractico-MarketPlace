@@ -8,9 +8,10 @@ import DeleteAddressCommand from './dto/DeleteAddress.dto';
 @Injectable()
 export class AddressService {
   constructor(
-      @Inject('AddressRepository') private readonly addressRepository: AddressRepository,
-    ) {}
-  
+    @Inject('AddressRepository')
+    private readonly addressRepository: AddressRepository,
+  ) {}
+
   createAddress(dto: CreateAddressCommand) {
     return this.addressRepository.createAddress(dto);
   }
@@ -28,14 +29,13 @@ export class AddressService {
       dtoUpdate.street_address,
       dtoUpdate.city,
       dtoUpdate.id,
-      dtoUpdate.details
+      dtoUpdate.details,
     );
 
     return this.addressRepository.EditAdressByID(address);
   }
 
-  deleteAddress(dto:DeleteAddressCommand) {
+  deleteAddress(dto: DeleteAddressCommand) {
     return this.addressRepository.deleteAddress(dto.getUser_id(), dto.getId());
   }
-
 }

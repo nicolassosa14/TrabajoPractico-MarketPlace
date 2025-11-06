@@ -140,9 +140,9 @@ describe('AddressService', () => {
       expect(mockAddressRepository.findAllAddressByUserID).toHaveBeenCalledWith(
         userId,
       );
-      expect(mockAddressRepository.findAllAddressByUserID).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(
+        mockAddressRepository.findAllAddressByUserID,
+      ).toHaveBeenCalledTimes(1);
     });
 
     it('should return empty array when user has no addresses', async () => {

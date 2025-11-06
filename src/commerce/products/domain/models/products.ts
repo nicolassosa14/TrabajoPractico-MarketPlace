@@ -1,42 +1,39 @@
 export default class Product {
-    constructor(
-        
-        private readonly name: string,
-        private readonly description: string,
-        private readonly image_url: string,
-        private readonly price: number,
-        private readonly is_available: boolean = true,
-        private readonly vendor_id?: string,
-        private readonly id?: number,
-    ) {}
+  constructor(
+    private readonly name: string,
+    private readonly description: string,
+    private readonly image_url: string,
+    private readonly price: number,
+    private readonly is_available: boolean = true,
+    private readonly vendor_id?: string,
+    private readonly id?: number,
+  ) {}
 
-    
-    public getId(): number | undefined {
-        return this.id;
-    }
- 
-    public getVendorId(): string | undefined {
-        return this.vendor_id;
-    }
+  public getId(): number | undefined {
+    return this.id;
+  }
 
-    public getName(): string {
-        return this.name;
-    }
+  public getVendorId(): string | undefined {
+    return this.vendor_id;
+  }
 
-    public getDescription(): string {
-        return this.description;
-    }
+  public getName(): string {
+    return this.name;
+  }
 
-    public getPrice(): number {
-        return this.price;
-    }
+  public getDescription(): string {
+    return this.description;
+  }
 
-    public getImageUrl(): string {
-        return this.image_url;
-    }
+  public getPrice(): number {
+    return this.price;
+  }
 
-    public getIsAvailable(): boolean {
-        return this.is_available;
-    }   
-    
+  public getImageUrl(): string {
+    return this.image_url;
+  }
+
+  public getIsAvailable(): boolean {
+    return this.is_available;
+  }
 }

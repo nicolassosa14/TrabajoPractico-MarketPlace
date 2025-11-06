@@ -4,15 +4,15 @@ import { CartItem } from '../../domain/entities/cart-item.entity';
 
 @Injectable()
 export class AddCartItemService {
-    constructor(
-        @Inject('CartRepository')
-        private readonly cartRepository: CartRepository
-    ) {}
+  constructor(
+    @Inject('CartRepository')
+    private readonly cartRepository: CartRepository,
+  ) {}
 
-    async execute(item: string) {
-        if(CartItem){
-            return this.cartRepository.getByUser(item);
-        }
-        return this.cartRepository.getByUser(item);
+  async execute(item: string) {
+    if (CartItem) {
+      return this.cartRepository.getByUser(item);
     }
+    return this.cartRepository.getByUser(item);
+  }
 }

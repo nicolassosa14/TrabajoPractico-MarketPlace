@@ -8,11 +8,11 @@ import { SupabaseCategoryRepository } from './infrastructure/repository/supabase
   imports: [SupabaseModule],
   controllers: [CategoriesController],
   providers: [
-    CategoriesService,{
+    CategoriesService,
+    {
       provide: 'CategoryRepository',
       useClass: SupabaseCategoryRepository,
-
-  }]
-    
+    },
+  ],
 })
 export class CategoriesModule {}

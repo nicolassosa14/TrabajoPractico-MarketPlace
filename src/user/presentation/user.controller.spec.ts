@@ -214,9 +214,9 @@ describe('UserController', () => {
     });
 
     it('should throw BadRequestException when user_id is null', async () => {
-      await expect(controller.getUserProfileRequest(null as any)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        controller.getUserProfileRequest(null as any),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException when user_id is undefined', async () => {

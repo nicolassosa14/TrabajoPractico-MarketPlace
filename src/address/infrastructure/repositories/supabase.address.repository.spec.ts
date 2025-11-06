@@ -136,7 +136,9 @@ describe('SupabaseAddressRepository', () => {
         .mockReturnValueOnce({ insert: mockInsert });
 
       // El repository lanza el error tal cual lo recibe de Supabase
-      await expect(repository.createAddress(address)).rejects.toEqual(errorObject);
+      await expect(repository.createAddress(address)).rejects.toEqual(
+        errorObject,
+      );
     });
 
     it('should create address without optional details', async () => {
@@ -300,12 +302,7 @@ describe('SupabaseAddressRepository', () => {
 
     it('should throw BadRequestException when update fails', async () => {
       const id = 'address-id-123';
-      const address = new Address(
-        'uuid-123',
-        '789 Street',
-        'City',
-        '12345',
-      );
+      const address = new Address('uuid-123', '789 Street', 'City', '12345');
 
       const mockChain = {
         update: jest.fn().mockReturnThis(),

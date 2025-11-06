@@ -4,8 +4,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 /**
  * Helper para crear una aplicación de prueba completa
  */
-export async function createTestingApp(moduleMetadata: any): Promise<INestApplication> {
-  const moduleFixture: TestingModule = await Test.createTestingModule(moduleMetadata).compile();
+export async function createTestingApp(
+  moduleMetadata: any,
+): Promise<INestApplication> {
+  const moduleFixture: TestingModule =
+    await Test.createTestingModule(moduleMetadata).compile();
   const app = moduleFixture.createNestApplication();
   await app.init();
   return app;
@@ -50,7 +53,11 @@ export async function cleanTestDatabase(supabaseClient: any): Promise<void> {
 /**
  * Helper para validar estructura de respuesta de error
  */
-export function expectErrorResponse(response: any, statusCode: number, messageContains?: string) {
+export function expectErrorResponse(
+  response: any,
+  statusCode: number,
+  messageContains?: string,
+) {
   expect(response.status).toBe(statusCode);
   if (messageContains) {
     expect(response.body.message).toContain(messageContains);

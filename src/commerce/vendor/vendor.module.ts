@@ -15,4 +15,4 @@ import { SupabaseModule } from 'src/supabase/supabase.module';
     },
   ],
 })
-export class VendorModule { }
+export class VendorModule {}

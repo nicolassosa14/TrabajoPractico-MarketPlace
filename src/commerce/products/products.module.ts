@@ -3,8 +3,8 @@ import { ProductsService } from './service/products.service';
 import { ProductsController } from './presentacion/products.controller';
 import { SupabaseProductRepository } from './infrastructure/repository/supabase.products.repository';
 import { SupabaseModule } from '../../supabase/supabase.module';
-import {ProductCategoryRepository} from '../product_category/contract/Product_category.repository';
-import {SupabaseProductCategoryRepository} from '../product_category/infrastructure/repository/supabase.product_vendor.repository'
+import { ProductCategoryRepository } from '../product_category/contract/Product_category.repository';
+import { SupabaseProductCategoryRepository } from '../product_category/infrastructure/repository/supabase.product_vendor.repository';
 
 @Module({
   imports: [SupabaseModule],
@@ -12,7 +12,10 @@ import {SupabaseProductCategoryRepository} from '../product_category/infrastruct
   providers: [
     ProductsService,
     { provide: 'ProductRepository', useClass: SupabaseProductRepository },
-    { provide: 'ProductCategoryRepository', useClass: SupabaseProductCategoryRepository },
+    {
+      provide: 'ProductCategoryRepository',
+      useClass: SupabaseProductCategoryRepository,
+    },
   ],
   exports: [ProductsService],
 })

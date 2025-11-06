@@ -188,9 +188,7 @@ describe('Address Domain Model', () => {
       );
 
       expect(address.getUser_id()).toBe('uuid-customer1');
-      expect(address.getStreet_address()).toBe(
-        '742 Evergreen Terrace, Apt 4B',
-      );
+      expect(address.getStreet_address()).toBe('742 Evergreen Terrace, Apt 4B');
       expect(address.getDetails()).toContain('Ring doorbell twice');
     });
 
@@ -215,9 +213,7 @@ describe('Address Domain Model', () => {
         '20500',
       );
 
-      expect(address.getStreet_address()).toBe(
-        '1600 Pennsylvania Avenue NW',
-      );
+      expect(address.getStreet_address()).toBe('1600 Pennsylvania Avenue NW');
       expect(address.getDetails()).toBeUndefined();
     });
   });

@@ -34,12 +34,7 @@ describe('SupabaseUserRepository', () => {
 
   describe('createUser', () => {
     it('should create a user successfully', async () => {
-      const user = new User(
-        'test@example.com',
-        'password123',
-        'John',
-        'Doe',
-      );
+      const user = new User('test@example.com', 'password123', 'John', 'Doe');
 
       const mockSignUpResponse = {
         data: {
@@ -331,7 +326,10 @@ describe('SupabaseUserRepository', () => {
         .mockReturnValueOnce(mockSelectChain)
         .mockReturnValueOnce(mockUpdateChain);
 
-      const result = await repository.updatePartialProfile(userId, partialUpdate);
+      const result = await repository.updatePartialProfile(
+        userId,
+        partialUpdate,
+      );
 
       expect(result).toEqual(mockUpdatedUser);
       expect(mockUpdateChain.update).toHaveBeenCalledWith(partialUpdate);

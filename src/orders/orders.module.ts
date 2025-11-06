@@ -21,28 +21,28 @@ import { NotificationAdapter } from './insfrastructure/adapters/notification.ada
 //import { NotificationService } from './application/ports/notification.service';
 
 @Module({
-    imports: [SupabaseModule], // Add SupabaseModule to imports
-    controllers: [OrdersController],
-    providers: [
-        //uso de casos
-        CreateOrderService,
-        UpdateStatusService,
-        GetOrdersService,
-        AddCartItemService,
-        GetCartService,
-        ClearCartService,
-        AddOrderItemService,
-        GetOrderItemsService,
+  imports: [SupabaseModule], // Add SupabaseModule to imports
+  controllers: [OrdersController],
+  providers: [
+    //uso de casos
+    CreateOrderService,
+    UpdateStatusService,
+    GetOrdersService,
+    AddCartItemService,
+    GetCartService,
+    ClearCartService,
+    AddOrderItemService,
+    GetOrderItemsService,
 
-        //repositorios
-        { provide: 'OrderRepository', useClass: SupabaseOrderRepository },
-        { provide: 'CartRepository', useClass: SupabaseCartRepository },
-        { provide: 'OrderItemRepository', useClass: SupabaseOrderItemRepository },
+    //repositorios
+    { provide: 'OrderRepository', useClass: SupabaseOrderRepository },
+    { provide: 'CartRepository', useClass: SupabaseCartRepository },
+    { provide: 'OrderItemRepository', useClass: SupabaseOrderItemRepository },
 
-        //adaptadores
-        { provide: 'PaymentService', useClass: PaymentAdapter },
-        { provide: 'NotificationService', useClass: NotificationAdapter },
-    ],
-    exports: [GetCartService, CreateOrderService],
+    //adaptadores
+    { provide: 'PaymentService', useClass: PaymentAdapter },
+    { provide: 'NotificationService', useClass: NotificationAdapter },
+  ],
+  exports: [GetCartService, CreateOrderService],
 })
 export class OrdersModule {}

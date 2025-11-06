@@ -4,15 +4,15 @@ import type { OrderItemRepository } from '../ports/order-item.repository';
 
 @Injectable()
 export class AddOrderItemService {
-    constructor(
-        @Inject('OrderItemRepository')
-        private readonly OrderItemRepository: OrderItemRepository
-    ) {}
-    
-    async execute(item: OrderItem) {
-        if(item){
-            return this.OrderItemRepository.add(item);
-        }
-        return this.OrderItemRepository.add(item);
-    }   
+  constructor(
+    @Inject('OrderItemRepository')
+    private readonly OrderItemRepository: OrderItemRepository,
+  ) {}
+
+  async execute(item: OrderItem) {
+    if (item) {
+      return this.OrderItemRepository.add(item);
+    }
+    return this.OrderItemRepository.add(item);
+  }
 }

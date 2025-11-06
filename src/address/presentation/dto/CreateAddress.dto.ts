@@ -1,46 +1,50 @@
 import { Type } from 'class-transformer';
 import {
-    IsString,
-    IsNotEmpty,
-    IsEmail,
-    MinLength,
-    IsUUID,
-    IsOptional,
-    MaxLength,
-    IsNumber,
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  MinLength,
+  IsUUID,
+  IsOptional,
+  MaxLength,
+  IsNumber,
 } from 'class-validator';
 
 export default class CreateAddressRequestDTO {
-    @IsUUID('4', { message: 'El user_id debe ser un UUID válido.' })
-    @IsNotEmpty({ message: 'El user_id es obligatorio.' })
-    user_id: string;
+  @IsUUID('4', { message: 'El user_id debe ser un UUID válido.' })
+  @IsNotEmpty({ message: 'El user_id es obligatorio.' })
+  user_id: string;
 
-    @IsString()
-    @MaxLength(255, { message: 'La direccion no puede exceder los 255 caracteres.',})
-    @IsNotEmpty({ message: 'La direccion es obligatoria.' })
-    street_address: string;
+  @IsString()
+  @MaxLength(255, {
+    message: 'La direccion no puede exceder los 255 caracteres.',
+  })
+  @IsNotEmpty({ message: 'La direccion es obligatoria.' })
+  street_address: string;
 
-    @IsString()
-    @MaxLength(100, { message: 'La ciudad no puede exceder los 100 caracteres.' })
-    @IsNotEmpty({ message: 'La ciudad es obligatorio.' })
-    city: string;
+  @IsString()
+  @MaxLength(100, { message: 'La ciudad no puede exceder los 100 caracteres.' })
+  @IsNotEmpty({ message: 'La ciudad es obligatorio.' })
+  city: string;
 
-    @IsString()
-    @MaxLength(20, { message: 'El codigo postal no puede exceder los 20 caracteres.'})
-    @IsNotEmpty({ message: 'El codigo postal es obligatorio.' })
-    postal_code: string;
+  @IsString()
+  @MaxLength(20, {
+    message: 'El codigo postal no puede exceder los 20 caracteres.',
+  })
+  @IsNotEmpty({ message: 'El codigo postal es obligatorio.' })
+  postal_code: string;
 
-    @IsString()
-    @IsOptional()
-    details?: string;
+  @IsString()
+  @IsOptional()
+  details?: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @Type(() => Number)
-    lat: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number)
+  lat: number;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @Type(() => Number)
-    long: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number)
+  long: number;
 }

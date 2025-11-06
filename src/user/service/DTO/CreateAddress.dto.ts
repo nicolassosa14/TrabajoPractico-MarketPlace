@@ -1,11 +1,11 @@
 export default class CreateAddressCommand {
-    user_id: string;
+  user_id: string;
 
-    street_address: string;
+  street_address: string;
 
-    city: string;
+  city: string;
 
-    postal_code: string;
+  postal_code: string;
 
-    details?: string;
+  details?: string;
 }

@@ -129,14 +129,12 @@ describe('User Module (E2E)', () => {
 
     beforeAll(async () => {
       // Crear usuario para login
-      await request(app.getHttpServer())
-        .post('/users')
-        .send({
-          email: loginEmail,
-          password: loginPassword,
-          first_name: 'Login',
-          last_name: 'Test',
-        });
+      await request(app.getHttpServer()).post('/users').send({
+        email: loginEmail,
+        password: loginPassword,
+        first_name: 'Login',
+        last_name: 'Test',
+      });
     });
 
     it('should login with valid credentials', () => {
@@ -198,14 +196,12 @@ describe('User Module (E2E)', () => {
     let testUserId: string;
 
     beforeAll(async () => {
-      const response = await request(app.getHttpServer())
-        .post('/users')
-        .send({
-          email: generateTestEmail(),
-          password: 'ProfileTest123!',
-          first_name: 'Profile',
-          last_name: 'User',
-        });
+      const response = await request(app.getHttpServer()).post('/users').send({
+        email: generateTestEmail(),
+        password: 'ProfileTest123!',
+        first_name: 'Profile',
+        last_name: 'User',
+      });
 
       testUserId = response.body.user.id;
     });
@@ -243,14 +239,12 @@ describe('User Module (E2E)', () => {
     let testUserId: string;
 
     beforeAll(async () => {
-      const response = await request(app.getHttpServer())
-        .post('/users')
-        .send({
-          email: generateTestEmail(),
-          password: 'UpdateTest123!',
-          first_name: 'Original',
-          last_name: 'Name',
-        });
+      const response = await request(app.getHttpServer()).post('/users').send({
+        email: generateTestEmail(),
+        password: 'UpdateTest123!',
+        first_name: 'Original',
+        last_name: 'Name',
+      });
 
       testUserId = response.body.user.id;
     });
@@ -313,27 +307,23 @@ describe('User Module (E2E)', () => {
     let testUserId: string;
 
     beforeAll(async () => {
-      const response = await request(app.getHttpServer())
-        .post('/users')
-        .send({
-          email: generateTestEmail(),
-          password: 'AddressTest123!',
-          first_name: 'Address',
-          last_name: 'User',
-        });
+      const response = await request(app.getHttpServer()).post('/users').send({
+        email: generateTestEmail(),
+        password: 'AddressTest123!',
+        first_name: 'Address',
+        last_name: 'User',
+      });
 
       testUserId = response.body.user.id;
 
       // Crear una dirección para este usuario
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: testUserId,
-          street_address: '123 Test Street',
-          city: 'Test City',
-          postal_code: '12345',
-          details: 'Test details',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: testUserId,
+        street_address: '123 Test Street',
+        city: 'Test City',
+        postal_code: '12345',
+        details: 'Test details',
+      });
     });
 
     it('should get user profile with addresses', () => {

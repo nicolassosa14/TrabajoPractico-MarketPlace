@@ -108,7 +108,12 @@ describe('UserService', () => {
     });
 
     it('should throw BadRequestException when password is missing', async () => {
-      const command = new CreateUserCommand('test@example.com', '', 'John', 'Doe');
+      const command = new CreateUserCommand(
+        'test@example.com',
+        '',
+        'John',
+        'Doe',
+      );
 
       await expect(service.createUser(command)).rejects.toThrow(
         BadRequestException,
@@ -393,9 +398,7 @@ describe('UserService', () => {
       ];
 
       mockUserRepository.getUserProfile.mockResolvedValue(mockProfile);
-      addressService.findAllAddressByUserID.mockResolvedValue(
-        mockAddresses,
-      );
+      addressService.findAllAddressByUserID.mockResolvedValue(mockAddresses);
 
       const result = await service.getUserWithAddresses(userId);
 

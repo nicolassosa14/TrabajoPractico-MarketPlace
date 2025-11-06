@@ -3,12 +3,7 @@ import User from './user';
 describe('User Domain Model', () => {
   describe('constructor', () => {
     it('should create a user with all required fields', () => {
-      const user = new User(
-        'test@example.com',
-        'password123',
-        'John',
-        'Doe',
-      );
+      const user = new User('test@example.com', 'password123', 'John', 'Doe');
 
       expect(user).toBeDefined();
       expect(user.getEmail()).toBe('test@example.com');
@@ -139,10 +134,7 @@ describe('User Domain Model', () => {
     });
 
     it('should handle special characters in email and password', () => {
-      const user = new User(
-        'test+tag@example.co.uk',
-        'P@ssw0rd!#$%',
-      );
+      const user = new User('test+tag@example.co.uk', 'P@ssw0rd!#$%');
 
       expect(user.getEmail()).toBe('test+tag@example.co.uk');
       expect(user.getPassword()).toBe('P@ssw0rd!#$%');

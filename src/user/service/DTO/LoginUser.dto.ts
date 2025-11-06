@@ -2,7 +2,7 @@ export default class LoginUserCommand {
   getEmail(): string {
     return this.email;
   }
-  getPassword() : string{
+  getPassword(): string {
     return this.password;
   }
   private readonly email: string;

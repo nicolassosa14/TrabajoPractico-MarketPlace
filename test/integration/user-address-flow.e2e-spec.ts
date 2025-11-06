@@ -193,24 +193,20 @@ describe('User-Address Integration Flow (E2E)', () => {
       const user2Id = user2Response.body.user.id;
 
       // Usuario 1 agrega dirección
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: user1Id,
-          street_address: 'User1 Street',
-          city: 'City1',
-          postal_code: '11111',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: user1Id,
+        street_address: 'User1 Street',
+        city: 'City1',
+        postal_code: '11111',
+      });
 
       // Usuario 2 agrega dirección
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: user2Id,
-          street_address: 'User2 Street',
-          city: 'City2',
-          postal_code: '22222',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: user2Id,
+        street_address: 'User2 Street',
+        city: 'City2',
+        postal_code: '22222',
+      });
 
       // Verificar que Usuario 1 solo ve su dirección
       const user1Addresses = await request(app.getHttpServer())
@@ -356,22 +352,18 @@ describe('User-Address Integration Flow (E2E)', () => {
       const userId = userResponse.body.user.id;
 
       // Agregar dirección
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: userId,
-          street_address: '123 Consistency St',
-          city: 'ConsCity',
-          postal_code: '12345',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: userId,
+        street_address: '123 Consistency St',
+        city: 'ConsCity',
+        postal_code: '12345',
+      });
 
       // Actualizar perfil
-      await request(app.getHttpServer())
-        .patch('/users/profile')
-        .send({
-          user_id: userId,
-          first_name: 'Updated',
-        });
+      await request(app.getHttpServer()).patch('/users/profile').send({
+        user_id: userId,
+        first_name: 'Updated',
+      });
 
       // Verificar que la dirección sigue vinculada al usuario
       const addressResponse = await request(app.getHttpServer())

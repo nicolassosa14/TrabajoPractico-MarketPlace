@@ -170,34 +170,28 @@ describe('Address Module (E2E)', () => {
       userWithAddresses = userResponse.body.user.id;
 
       // Crear múltiples direcciones para este usuario
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: userWithAddresses,
-          street_address: '111 First Street',
-          city: 'City1',
-          postal_code: '11111',
-          details: 'First address',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: userWithAddresses,
+        street_address: '111 First Street',
+        city: 'City1',
+        postal_code: '11111',
+        details: 'First address',
+      });
 
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: userWithAddresses,
-          street_address: '222 Second Street',
-          city: 'City2',
-          postal_code: '22222',
-          details: 'Second address',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: userWithAddresses,
+        street_address: '222 Second Street',
+        city: 'City2',
+        postal_code: '22222',
+        details: 'Second address',
+      });
 
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: userWithAddresses,
-          street_address: '333 Third Street',
-          city: 'City3',
-          postal_code: '33333',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: userWithAddresses,
+        street_address: '333 Third Street',
+        city: 'City3',
+        postal_code: '33333',
+      });
     });
 
     it('should get all addresses for a user', () => {
@@ -265,15 +259,13 @@ describe('Address Module (E2E)', () => {
       userForUpdate = userResponse.body.user.id;
 
       // Crear una dirección para actualizar
-      await request(app.getHttpServer())
-        .post('/address')
-        .send({
-          user_id: userForUpdate,
-          street_address: '999 Original Street',
-          city: 'Original City',
-          postal_code: '99999',
-          details: 'Original details',
-        });
+      await request(app.getHttpServer()).post('/address').send({
+        user_id: userForUpdate,
+        street_address: '999 Original Street',
+        city: 'Original City',
+        postal_code: '99999',
+        details: 'Original details',
+      });
 
       // Obtener el ID de la dirección creada
       const addressesResponse = await request(app.getHttpServer())

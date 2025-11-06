@@ -24,7 +24,7 @@ export class SupabaseUserRepository implements UserRepository {
   ) {}
 
   async createUser(user: User): Promise<any> {
-    let { data, error } = await this.supabaseClient.auth.signUp({
+    const { data, error } = await this.supabaseClient.auth.signUp({
       email: user.getEmail(),
       password: user.getPassword(),
     });
@@ -32,7 +32,7 @@ export class SupabaseUserRepository implements UserRepository {
     if (error) {
       throw new Error('Usuario no creado: ' + error.message);
     }
-    let newuuid = data.user?.id;
+    const newuuid = data.user?.id;
 
     if (!newuuid) {
       throw new Error('El perfil no se pudo crear');
@@ -76,7 +76,7 @@ export class SupabaseUserRepository implements UserRepository {
   }
 
   async resendVerificationEmail(email: string): Promise<any> {
-    let { data, error } = await this.supabaseClient.auth.resend({
+    const { data, error } = await this.supabaseClient.auth.resend({
       type: 'signup',
       email: email,
     });
@@ -89,7 +89,7 @@ export class SupabaseUserRepository implements UserRepository {
   }
   //ver como implementar bien
   async VerificationStatus(email: string): Promise<any> {
-    let { data, error } = await this.supabaseClient.auth.getUser();
+    const { data, error } = await this.supabaseClient.auth.getUser();
     if (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
@@ -97,7 +97,7 @@ export class SupabaseUserRepository implements UserRepository {
   }
 
   async loginUser(user: User): Promise<any> {
-    let { data, error } = await this.supabaseClient.auth.signInWithPassword({
+    const { data, error } = await this.supabaseClient.auth.signInWithPassword({
       email: user.getEmail(),
       password: user.getPassword(),
     });

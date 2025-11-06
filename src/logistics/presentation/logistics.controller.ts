@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { LogisticsService } from '../service/logistics.service';
 import { CreateLogisticRequestDTO } from './dto/create-logistic.dto';
 import { UpdateLogisticRequestDTO } from './dto/update-logistic.dto';
@@ -18,7 +26,12 @@ export class LogisticsController {
       dto.is_available = true;
     }
 
-    const command = new CreateLogisticCommand(dto.user_id, dto.vehicle_type, dto.license_plate, dto.is_available);
+    const command = new CreateLogisticCommand(
+      dto.user_id,
+      dto.vehicle_type,
+      dto.license_plate,
+      dto.is_available,
+    );
     return this.logisticsService.CreateLogistic(command);
   }
 
@@ -28,8 +41,12 @@ export class LogisticsController {
   }
 
   @Patch('status')
-  UpdateStatus(@Body() dto: UpdateStatusLogisticRequestDTO ) {
-    const command = new UpdateStatusLogisticCommand(dto.id, dto.user_id, dto.is_available);
+  UpdateStatus(@Body() dto: UpdateStatusLogisticRequestDTO) {
+    const command = new UpdateStatusLogisticCommand(
+      dto.id,
+      dto.user_id,
+      dto.is_available,
+    );
     return this.logisticsService.UpdateStatus(command);
   }
 
@@ -39,7 +56,10 @@ export class LogisticsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLogisticDto: UpdateLogisticRequestDTO) {
+  update(
+    @Param('id') id: string,
+    @Body() updateLogisticDto: UpdateLogisticRequestDTO,
+  ) {
     return this.logisticsService.update(+id, updateLogisticDto);
   }
 

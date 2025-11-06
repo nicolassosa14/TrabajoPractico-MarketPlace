@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AddressService } from '../service/address.service';
 import CreateAddressRequestDTO from './dto/CreateAddress.dto';
 import CreateAddressCommand from '../service/dto/CreateAddress.dto';
@@ -17,7 +25,7 @@ export class AddressController {
     if (createAddressDto.details === '') {
       createAddressDto.details = undefined;
     }
-    console.log("Received CreateAddressRequestDTO:", createAddressDto);
+    console.log('Received CreateAddressRequestDTO:', createAddressDto);
     const command = new CreateAddressCommand(
       createAddressDto.user_id,
       createAddressDto.street_address,
@@ -25,7 +33,7 @@ export class AddressController {
       createAddressDto.postal_code,
       createAddressDto.lat,
       createAddressDto.long,
-      createAddressDto.details
+      createAddressDto.details,
     );
     return this.addressService.createAddress(command);
   }
@@ -40,18 +48,20 @@ export class AddressController {
     const command = new UpdateAddressCommand(
       updateAddressDto.id,
       updateAddressDto.user_id,
-      updateAddressDto.street_address, 
-      updateAddressDto.city, 
-      updateAddressDto.postal_code, 
-      updateAddressDto.details
+      updateAddressDto.street_address,
+      updateAddressDto.city,
+      updateAddressDto.postal_code,
+      updateAddressDto.details,
     );
     return this.addressService.UpdateAddress(command);
   }
 
   @Delete()
   deleteAddressRequest(@Body() deleteAddressDto: DeleteAddressRequestDTO) {
-    const command = new DeleteAddressCommand(deleteAddressDto.user_id, deleteAddressDto.id);
+    const command = new DeleteAddressCommand(
+      deleteAddressDto.user_id,
+      deleteAddressDto.id,
+    );
     return this.addressService.deleteAddress(command);
   }
-  
 }

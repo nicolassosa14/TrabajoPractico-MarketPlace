@@ -6,22 +6,22 @@ import { Order } from '../../domain/entities/order.entity';
 
 @Injectable()
 export class UpdateStatusService {
-    constructor(
-        @Inject('OrderRepository')
-        private readonly orderRepository: OrderRepository,
+  constructor(
+    @Inject('OrderRepository')
+    private readonly orderRepository: OrderRepository,
 
-        @Inject('NotificationService')
-        private readonly notificationService: NotificationService,
-    ) {}
+    @Inject('NotificationService')
+    private readonly notificationService: NotificationService,
+  ) {}
 
-    async execute(orderId: string, status: OrderStatus): Promise<Order> {
-        const updated = await this.orderRepository.updateStatus(orderId, status);
+  async execute(orderId: string, status: OrderStatus): Promise<Order> {
+    const updated = await this.orderRepository.updateStatus(orderId, status);
 
-        await this.notificationService.sendNotification(
-        updated.userId,
-        `Tu pedido ahora está: ${status}`,
-        );
+    await this.notificationService.sendNotification(
+      updated.userId,
+      `Tu pedido ahora está: ${status}`,
+    );
 
-        return updated;
-    }
+    return updated;
+  }
 }
