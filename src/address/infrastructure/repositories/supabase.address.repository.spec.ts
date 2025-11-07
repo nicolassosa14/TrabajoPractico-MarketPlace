@@ -38,9 +38,12 @@ describe('SupabaseAddressRepository', () => {
     it('should create an address successfully', async () => {
       const address = new Address(
         'uuid-123',
+        40.7128,
+        -74.0060,
+        '12345',
         '123 Main Street',
         'Springfield',
-        '12345',
+        undefined,
         'Apt 4B',
       );
 
@@ -66,13 +69,15 @@ describe('SupabaseAddressRepository', () => {
 
       const result = await repository.createAddress(address);
 
-      expect(result).toBe('Dirección creada con éxito [object Object]');
+      expect(result).toBe('Dirección creada con éxito ');
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('addresses');
       expect(mockInsert).toHaveBeenCalledWith({
         user_id: 'uuid-123',
         street_address: '123 Main Street',
         city: 'Springfield',
         postal_code: '12345',
+        latitude: 40.7128,
+        longitude: -74.0060,
         details: 'Apt 4B',
       });
     });
@@ -80,9 +85,11 @@ describe('SupabaseAddressRepository', () => {
     it('should throw BadRequestException when address already exists', async () => {
       const address = new Address(
         'uuid-123',
+        40.7128,
+        -74.0060,
+        '12345',
         '123 Main Street',
         'Springfield',
-        '12345',
       );
 
       // Mock que retorna una dirección existente
@@ -111,9 +118,11 @@ describe('SupabaseAddressRepository', () => {
     it('should handle database errors during insert', async () => {
       const address = new Address(
         'uuid-123',
+        40.7128,
+        -74.0060,
+        '12345',
         '123 Main Street',
         'Springfield',
-        '12345',
       );
 
       const mockSelectChain = {
@@ -144,9 +153,11 @@ describe('SupabaseAddressRepository', () => {
     it('should create address without optional details', async () => {
       const address = new Address(
         'uuid-123',
+        41.8781,
+        -87.6298,
+        '67890',
         '456 Oak Avenue',
         'Shelbyville',
-        '67890',
       );
 
       const mockSelectChain = {
@@ -173,6 +184,8 @@ describe('SupabaseAddressRepository', () => {
         street_address: '456 Oak Avenue',
         city: 'Shelbyville',
         postal_code: '67890',
+        latitude: 41.8781,
+        longitude: -87.6298,
         details: undefined,
       });
     });
@@ -273,70 +286,131 @@ describe('SupabaseAddressRepository', () => {
 
   describe('EditAdressByID', () => {
     it('should update an address successfully', async () => {
-      const id = 'address-id-123';
       const address = new Address(
         'uuid-123',
+        40.7128,
+        -74.0060,
+        '99999',
         '789 Updated Street',
         'New City',
-        '99999',
+        'address-id-123',
         'Updated details',
       );
 
-      const mockChain = {
-        update: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: { id, ...address },
-          error: null,
-        }),
+      // Mock para la verificación
+      const mockVerifyChain: any = {
+        select: jest.fn().mockReturnThis(),
+        eq: jest.fn(),
       };
+      mockVerifyChain.eq.mockReturnValueOnce(mockVerifyChain).mockResolvedValueOnce({
+        data: [],
+        error: null,
+      });
 
-      mockSupabaseClient.from.mockReturnValue(mockChain);
+      // Mock para la actualización
+      const mockUpdateChain: any = {
+        update: jest.fn().mockReturnThis(),
+        eq: jest.fn(),
+      };
+      mockUpdateChain.eq
+        .mockReturnValueOnce(mockUpdateChain)
+        .mockResolvedValueOnce({
+          data: { id: 'address-id-123' },
+          error: null,
+        });
 
-      const result = await repository.EditAdressByID(id, address);
+      mockSupabaseClient.from
+        .mockReturnValueOnce(mockVerifyChain)
+        .mockReturnValueOnce(mockUpdateChain);
 
-      expect(result).toBeDefined();
-      expect(mockSupabaseClient.from).toHaveBeenCalledWith('addresses');
-      expect(mockChain.update).toHaveBeenCalledWith({ address });
-      expect(mockChain.eq).toHaveBeenCalledWith('id', id);
+      const result = await repository.EditAdressByID(address);
+
+      expect(result).toBe('Dirección actualizada con éxito');
+      expect(mockSupabaseClient.from).toHaveBeenCalledTimes(2);
+      expect(mockUpdateChain.update).toHaveBeenCalledWith({
+        street_address: '789 Updated Street',
+        city: 'New City',
+        postal_code: '99999',
+        details: 'Updated details',
+      });
     });
 
     it('should throw BadRequestException when update fails', async () => {
-      const id = 'address-id-123';
-      const address = new Address('uuid-123', '789 Street', 'City', '12345');
+      const address = new Address(
+        'uuid-123',
+        40.7128,
+        -74.0060,
+        '12345',
+        '789 Street',
+        'City',
+        'address-id-123',
+      );
 
-      const mockChain = {
+      const mockVerifyChain: any = {
+        select: jest.fn().mockReturnThis(),
+        eq: jest.fn(),
+      };
+      mockVerifyChain.eq.mockReturnValueOnce(mockVerifyChain).mockResolvedValueOnce({
+        data: [],
+        error: null,
+      });
+
+      const mockUpdateChain: any = {
         update: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
+        eq: jest.fn(),
+      };
+      mockUpdateChain.eq
+        .mockReturnValueOnce(mockUpdateChain)
+        .mockResolvedValueOnce({
           data: null,
           error: { message: 'Update failed' },
-        }),
-      };
+        });
 
-      mockSupabaseClient.from.mockReturnValue(mockChain);
+      mockSupabaseClient.from
+        .mockReturnValueOnce(mockVerifyChain)
+        .mockReturnValueOnce(mockUpdateChain);
 
-      await expect(repository.EditAdressByID(id, address)).rejects.toThrow(
+      await expect(repository.EditAdressByID(address)).rejects.toThrow(
         BadRequestException,
-      );
-      await expect(repository.EditAdressByID(id, address)).rejects.toThrow(
-        'Error al editar la direccion: Update failed',
       );
     });
 
     it('should handle non-existent address ID', async () => {
-      const id = 'non-existent-id';
-      const address = new Address('uuid-123', 'Street', 'City', '12345');
+      const address = new Address(
+        'uuid-123',
+        40.7128,
+        -74.0060,
+        '12345',
+        'Street',
+        'City',
+        'non-existent-id',
+      );
 
-      const mockChain = {
+      const mockVerifyChain: any = {
+        select: jest.fn().mockReturnThis(),
+        eq: jest.fn(),
+      };
+      mockVerifyChain.eq.mockReturnValueOnce(mockVerifyChain).mockResolvedValueOnce({
+        data: [],
+        error: null,
+      });
+
+      const mockUpdateChain: any = {
         update: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
+        eq: jest.fn(),
+      };
+      mockUpdateChain.eq
+        .mockReturnValueOnce(mockUpdateChain)
+        .mockResolvedValueOnce({
           data: null,
           error: { message: 'Address not found' },
-        }),
-      };
+        });
 
-      mockSupabaseClient.from.mockReturnValue(mockChain);
+      mockSupabaseClient.from
+        .mockReturnValueOnce(mockVerifyChain)
+        .mockReturnValueOnce(mockUpdateChain);
 
-      await expect(repository.EditAdressByID(id, address)).rejects.toThrow(
+      await expect(repository.EditAdressByID(address)).rejects.toThrow(
         'Error al editar la direccion: Address not found',
       );
     });

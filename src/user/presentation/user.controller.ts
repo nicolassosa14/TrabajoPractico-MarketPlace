@@ -45,19 +45,20 @@ export class UserController {
   async resendVerificationEmailRequest(@Param('email') email: string) {
     return this.userService.resendVerificationEmail(email);
   }
-  @Get('/verification-status/:email')
-  async VerificationStatusRequest(@Param('email') email: string) {
-    return this.userService.VerificationStatus(email);
-  }
 
   @Get('/profile/:user_id')
   async getUserProfileRequest(@Param('user_id') user_id: string) {
+    if (!user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     return this.userService.getUserProfile(user_id);
   }
 
   @Patch('/profile')
   async EditUserInfoRequest(@Body() dto: PatchUserRequestDTO) {
-    // objeto solo con los campos que se enviaron
+    if (!dto.user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     const updateData: Partial<PatchUserRequestDTO> = {};
 
     if (dto.email !== undefined) updateData.email = dto.email;

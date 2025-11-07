@@ -44,11 +44,11 @@ export class UserService {
   async resendVerificationEmail(email: string) {
     return this.userRepository.resendVerificationEmail(email);
   }
-  async VerificationStatus(email: string) {
-    return this.userRepository.VerificationStatus(email);
-  }
 
   async getUserProfile(user_id: string) {
+    if (!user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     return this.userRepository.getUserProfile(user_id);
   }
 
@@ -81,6 +81,9 @@ export class UserService {
   }
 
   async getUserWithAddresses(user_id: string) {
+    if (!user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     const [userProfile, addresses] = await Promise.all([
       this.userRepository.getUserProfile(user_id),
       this.addressService.findAllAddressByUserID(user_id),

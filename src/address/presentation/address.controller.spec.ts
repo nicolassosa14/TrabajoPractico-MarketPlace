@@ -12,6 +12,7 @@ describe('AddressController', () => {
     createAddress: jest.fn(),
     findAllAddressByUserID: jest.fn(),
     UpdateAddress: jest.fn(),
+    deleteAddress: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -203,7 +204,8 @@ describe('AddressController', () => {
   describe('updateAddressRequest', () => {
     it('should update an address successfully', async () => {
       const dto: UpdateAddressRequestDTO = {
-        user_id: 'address-id-123',
+        id: 'address-id-123',
+        user_id: 'uuid-123',
         street_address: '789 Updated Street',
         city: 'New City',
         postal_code: '99999',
@@ -221,7 +223,8 @@ describe('AddressController', () => {
 
     it('should map update DTO to Command correctly', async () => {
       const dto: UpdateAddressRequestDTO = {
-        user_id: 'address-id-456',
+        id: 'address-id-456',
+        user_id: 'uuid-456',
         street_address: '456 New Street',
         city: 'Updated City',
         postal_code: '88888',
@@ -234,6 +237,7 @@ describe('AddressController', () => {
 
       const command = mockAddressService.UpdateAddress.mock.calls[0][0];
       expect(command.id).toBe('address-id-456');
+      expect(command.user_id).toBe('uuid-456');
       expect(command.street_address).toBe('456 New Street');
       expect(command.city).toBe('Updated City');
       expect(command.postal_code).toBe('88888');
@@ -242,7 +246,8 @@ describe('AddressController', () => {
 
     it('should handle partial updates', async () => {
       const dto: UpdateAddressRequestDTO = {
-        user_id: 'address-id-789',
+        id: 'address-id-789',
+        user_id: 'uuid-789',
         city: 'New City Only',
       };
 
@@ -252,15 +257,16 @@ describe('AddressController', () => {
 
       const command = mockAddressService.UpdateAddress.mock.calls[0][0];
       expect(command.id).toBe('address-id-789');
+      expect(command.user_id).toBe('uuid-789');
       expect(command.city).toBe('New City Only');
       expect(command.street_address).toBeUndefined();
       expect(command.postal_code).toBeUndefined();
     });
 
-    // Nota: Estos tests deberían pasar una vez que se implemente UpdateAddress
-    it.skip('should propagate update errors when implemented', async () => {
+    it('should propagate update errors', async () => {
       const dto: UpdateAddressRequestDTO = {
-        user_id: 'address-id-123',
+        id: 'address-id-123',
+        user_id: 'uuid-123',
         street_address: '789 Street',
       };
 
@@ -270,6 +276,39 @@ describe('AddressController', () => {
 
       await expect(controller.updateAddressRequest(dto)).rejects.toThrow(
         'Update failed',
+      );
+    });
+  });
+
+  describe('deleteAddressRequest', () => {
+    it('should delete an address successfully', async () => {
+      const dto = {
+        user_id: 'uuid-123',
+        id: 'address-id-456',
+      };
+
+      const mockResponse = 'Dirección eliminada con éxito';
+
+      mockAddressService.deleteAddress.mockResolvedValue(mockResponse);
+
+      const result = await controller.deleteAddressRequest(dto as any);
+
+      expect(result).toBe(mockResponse);
+      expect(mockAddressService.deleteAddress).toHaveBeenCalledTimes(1);
+    });
+
+    it('should propagate deletion errors', async () => {
+      const dto = {
+        user_id: 'uuid-123',
+        id: 'address-id-456',
+      };
+
+      mockAddressService.deleteAddress.mockRejectedValue(
+        new Error('Delete failed'),
+      );
+
+      await expect(controller.deleteAddressRequest(dto as any)).rejects.toThrow(
+        'Delete failed',
       );
     });
   });

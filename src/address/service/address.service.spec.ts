@@ -3,6 +3,7 @@ import { AddressService } from './address.service';
 import { AddressRepository } from '../domain/contract/address.repository';
 import CreateAddressCommand from './dto/CreateAddress.dto';
 import UpdateAddressCommand from './dto/UpdateAddress.dto';
+import DeleteAddressCommand from './dto/DeleteAddress.dto';
 import Address from '../domain/models/address';
 
 describe('AddressService', () => {
@@ -13,6 +14,7 @@ describe('AddressService', () => {
     createAddress: jest.fn(),
     findAllAddressByUserID: jest.fn(),
     EditAdressByID: jest.fn(),
+    deleteAddress: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -43,6 +45,8 @@ describe('AddressService', () => {
         '123 Main Street',
         'Springfield',
         '12345',
+        40.7128,
+        -74.0060,
         'Apt 4B',
       );
 
@@ -63,6 +67,8 @@ describe('AddressService', () => {
         '456 Oak Avenue',
         'Shelbyville',
         '67890',
+        41.8781,
+        -87.6298,
       );
 
       mockAddressRepository.createAddress.mockResolvedValue('Success');
@@ -79,6 +85,8 @@ describe('AddressService', () => {
         '123 Main Street',
         'Springfield',
         '12345',
+        40.7128,
+        -74.0060,
       );
 
       mockAddressRepository.createAddress.mockRejectedValue(
@@ -96,6 +104,8 @@ describe('AddressService', () => {
         '123 Main Street',
         'Springfield',
         '12345',
+        40.7128,
+        -74.0060,
       );
 
       mockAddressRepository.createAddress.mockRejectedValue(
@@ -182,25 +192,10 @@ describe('AddressService', () => {
   });
 
   describe('UpdateAddress', () => {
-    it('should be defined but currently not implemented', () => {
-      const command = new UpdateAddressCommand(
-        'uuid-123',
-        '789 New Street',
-        'New City',
-        '99999',
-      );
-
-      const result = service.UpdateAddress(command);
-
-      // Actualmente el método no retorna nada (está comentado)
-      expect(result).toBeUndefined();
-    });
-
-    // Nota: Una vez que se implemente UpdateAddress, estos tests deberán activarse:
-
-    it.skip('should update address when implemented', async () => {
+    it('should update address with valid data', async () => {
       const command = new UpdateAddressCommand(
         'address-id-123',
+        'uuid-123',
         '789 Updated Street',
         'Updated City',
         '99999',
@@ -216,23 +211,92 @@ describe('AddressService', () => {
         details: 'New instructions',
       };
 
-      // mockAddressRepository.EditAdressByID.mockResolvedValue(mockUpdatedAddress);
+      mockAddressRepository.EditAdressByID.mockResolvedValue(
+        mockUpdatedAddress,
+      );
 
-      // const result = await service.UpdateAddress(command);
+      const result = await service.UpdateAddress(command);
 
-      // expect(result).toEqual(mockUpdatedAddress);
+      expect(result).toEqual(mockUpdatedAddress);
+      expect(mockAddressRepository.EditAdressByID).toHaveBeenCalledTimes(1);
+      expect(mockAddressRepository.EditAdressByID).toHaveBeenCalledWith(
+        expect.any(Address),
+      );
     });
 
-    it.skip('should handle partial updates when implemented', async () => {
+    it('should handle partial updates', async () => {
       const command = new UpdateAddressCommand(
         'address-id-123',
+        'uuid-123',
         undefined,
         'New City',
         undefined,
         'Updated details',
       );
 
-      // Test para actualización parcial cuando se implemente
+      const mockUpdatedAddress = {
+        id: 'address-id-123',
+        user_id: 'uuid-123',
+        city: 'New City',
+        details: 'Updated details',
+      };
+
+      mockAddressRepository.EditAdressByID.mockResolvedValue(
+        mockUpdatedAddress,
+      );
+
+      const result = await service.UpdateAddress(command);
+
+      expect(result).toEqual(mockUpdatedAddress);
+      expect(mockAddressRepository.EditAdressByID).toHaveBeenCalled();
+    });
+
+    it('should propagate repository errors', async () => {
+      const command = new UpdateAddressCommand(
+        'address-id-123',
+        'uuid-123',
+        '789 Updated Street',
+        'Updated City',
+      );
+
+      mockAddressRepository.EditAdressByID.mockRejectedValue(
+        new Error('Update failed'),
+      );
+
+      await expect(service.UpdateAddress(command)).rejects.toThrow(
+        'Update failed',
+      );
+    });
+  });
+
+  describe('deleteAddress', () => {
+    it('should delete an address with valid data', async () => {
+      const command = new DeleteAddressCommand('uuid-123', 'address-id-456');
+
+      const mockResponse = 'Dirección eliminada con éxito';
+
+      mockAddressRepository.deleteAddress.mockResolvedValue(mockResponse);
+
+      const result = await service.deleteAddress(command);
+
+      expect(result).toBe(mockResponse);
+      expect(mockAddressRepository.deleteAddress).toHaveBeenCalledTimes(1);
+      expect(mockAddressRepository.deleteAddress).toHaveBeenCalledWith(
+        'uuid-123',
+        'address-id-456',
+      );
+    });
+
+    it('should propagate repository errors during deletion', async () => {
+      const command = new DeleteAddressCommand('uuid-123', 'address-id-456');
+
+      mockAddressRepository.deleteAddress.mockRejectedValue(
+        new Error('Delete failed'),
+      );
+
+      await expect(service.deleteAddress(command)).rejects.toThrow(
+        'Delete failed',
+      );
     });
   });
 });

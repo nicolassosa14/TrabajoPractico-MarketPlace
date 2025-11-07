@@ -113,6 +113,7 @@ describe('SupabaseUserRepository', () => {
         first_name: 'John',
         last_name: 'Doe',
         role: 'customer',
+        email: 'test@example.com',
       });
     });
   });
@@ -136,6 +137,7 @@ describe('SupabaseUserRepository', () => {
         first_name: 'John',
         last_name: 'Doe',
         role: 'customer',
+        email: 'test@example.com',
       });
     });
 

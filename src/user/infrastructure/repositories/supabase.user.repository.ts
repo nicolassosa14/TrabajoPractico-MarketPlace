@@ -87,14 +87,6 @@ export class SupabaseUserRepository implements UserRepository {
 
     return data;
   }
-  //ver como implementar bien
-  async VerificationStatus(email: string): Promise<any> {
-    const { data, error } = await this.supabaseClient.auth.getUser();
-    if (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-    }
-    return data;
-  }
 
   async loginUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient.auth.signInWithPassword({
@@ -104,37 +96,6 @@ export class SupabaseUserRepository implements UserRepository {
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-    }
-    return data;
-  }
-
-  //VER
-  async deleteUser(user: User): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .delete()
-      .eq('id', user.getId());
-
-    if (error) {
-      throw new Error('Usuario no eliminado: ' + error.message);
-    }
-    return data;
-  }
-
-  //POR EL MOMENTO NO SE USA
-  async update(command: UpdatePutUserCommand): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .update({
-        name: command.getName(),
-        email: command.getEmail(),
-        phone_number: command.getPhone(),
-      })
-      .eq('id', command.getId())
-      .select();
-
-    if (error) {
-      throw new Error('Usuario no actualizado: ' + error.message);
     }
     return data;
   }
@@ -195,28 +156,6 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-  //terminar
-  async delete(user_id: string): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .delete()
-      .eq('id', user_id);
-
-    if (error) throw error;
-    return data;
-  }
-  //no creo que se use
-  async updateUser(user: User): Promise<User> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .update(user)
-      .eq('id', user.getId())
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  }
   //NO SE SI VAN TODAVIA, O SON DE OTRO MODULO
   async addFavoriteVendor(user_id: string, vendor_id: string) {
     const { data, error } = await this.supabaseClient
@@ -231,21 +170,6 @@ export class SupabaseUserRepository implements UserRepository {
       .delete()
       .eq('user_id', user_id)
       .eq('vendor_id', vendor_id);
-    if (error) throw error;
-    return data;
-  }
-  //
-
-  async addAdresss(
-    user_id: string,
-    street_address: string,
-    city: string,
-    postal_code: string,
-    details: string,
-  ) {
-    const { data, error } = await this.supabaseClient
-      .from('addresses')
-      .insert({ user_id, street_address, city, postal_code, details });
     if (error) throw error;
     return data;
   }
