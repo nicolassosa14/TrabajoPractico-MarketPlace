@@ -18,4 +18,5 @@ export interface UserRepository {
   findById(id: number): Promise<User | null>;
   addFavoriteVendor(user_id: string, vendor_id: string): Promise<any>;
   removeFavoriteVendor(user_id: string, vendor_id: string): Promise<any>;
+  getFavoriteVendorsByUserID(user_id: string): Promise<string[]>;
 }

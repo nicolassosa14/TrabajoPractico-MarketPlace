@@ -94,4 +94,16 @@ export class UserService {
       addresses,
     };
   }
+
+  async addFavoriteVendor(user_id: string, vendor_id: string) {
+    return this.userRepository.addFavoriteVendor(user_id, vendor_id);
+  }
+
+  async removeFavoriteVendor(user_id: string, vendor_id: string) {
+    return this.userRepository.removeFavoriteVendor(user_id, vendor_id);
+  }
+
+  async getUserFavoriteVendors(user_id: string) {
+    return this.userRepository.getFavoriteVendorsByUserID(user_id);
+  }
 }

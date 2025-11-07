@@ -82,4 +82,25 @@ export class UserController {
   async getUserProfileWithAddresses(@Param('user_id') user_id: string) {
     return this.userService.getUserWithAddresses(user_id);
   }
+
+  @Post('/favorite-vendors/:user_id/:vendor_id')
+  async addFavoriteVendorRequest(
+    @Param('user_id') user_id: string,
+    @Param('vendor_id') vendor_id: string,
+  ) {
+    return this.userService.addFavoriteVendor(user_id, vendor_id);
+  }
+
+  @Delete('/favorite-vendors/:user_id/:vendor_id')
+  async removeFavoriteVendorRequest(
+    @Param('user_id') user_id: string,
+    @Param('vendor_id') vendor_id: string,
+  ) {
+    return this.userService.removeFavoriteVendor(user_id, vendor_id);
+  }
+
+  @Get('/favorite-vendors/:user_id')
+  async getUserFavoriteVendors(@Param('user_id') user_id: string) {
+    return this.userService.getUserFavoriteVendors(user_id);
+  }
 }
