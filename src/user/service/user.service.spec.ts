@@ -75,8 +75,8 @@ describe('UserService', () => {
       const command = new CreateUserCommand(
         'test@example.com',
         'password123',
-        'John',
-        'Doe',
+        'Pepe',
+        'Perez',
       );
 
       const mockResponse = {
@@ -96,7 +96,7 @@ describe('UserService', () => {
     });
 
     it('should throw BadRequestException when email is missing', async () => {
-      const command = new CreateUserCommand('', 'password123', 'John', 'Doe');
+      const command = new CreateUserCommand('', 'password123', 'Pepe', 'Perez');
 
       await expect(service.createUser(command)).rejects.toThrow(
         BadRequestException,
@@ -111,8 +111,8 @@ describe('UserService', () => {
       const command = new CreateUserCommand(
         'test@example.com',
         '',
-        'John',
-        'Doe',
+        'Pepe',
+        'Perez',
       );
 
       await expect(service.createUser(command)).rejects.toThrow(
@@ -126,7 +126,7 @@ describe('UserService', () => {
         'test@example.com',
         'password123',
         '',
-        'Doe',
+        'Perez',
       );
 
       await expect(service.createUser(command)).rejects.toThrow(
@@ -139,7 +139,7 @@ describe('UserService', () => {
       const command = new CreateUserCommand(
         'test@example.com',
         'password123',
-        'John',
+        'Pepe',
         '',
       );
 
@@ -153,8 +153,8 @@ describe('UserService', () => {
       const command = new CreateUserCommand(
         'test@example.com',
         'password123',
-        'John',
-        'Doe',
+        'Pepe',
+        'Perez',
       );
 
       mockUserRepository.createUser.mockRejectedValue(
@@ -251,8 +251,8 @@ describe('UserService', () => {
       const mockProfile = {
         id: 1,
         user_id: userId,
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
         email: 'test@example.com',
       };
 
@@ -389,8 +389,8 @@ describe('UserService', () => {
       const mockProfile = {
         id: 1,
         user_id: userId,
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
       };
       const mockAddresses = [
         { id: 1, street_address: '123 Main St', city: 'Springfield' },

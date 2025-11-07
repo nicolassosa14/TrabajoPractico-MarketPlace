@@ -16,11 +16,12 @@ export async function createTestingApp(
 
 /**
  * Helper para generar emails de prueba únicos
+ * Genera emails válidos que pasen validación de Supabase
  */
 export function generateTestEmail(): string {
-  const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 10000);
-  return `test-${timestamp}-${random}@example.com`;
+  const random = Math.floor(Math.random() * 1000000000);
+  // Usar dominio válido: gmail.com es reconocido por Supabase
+  return `testuser${random}@gmail.com`;
 }
 
 /**

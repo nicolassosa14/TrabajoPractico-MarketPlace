@@ -21,7 +21,7 @@
     "test:integration": "jest --config ./test/jest-integration.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:all": "npm run test:unit && npm run test:e2e",
+    "test:all": "npm run test:unit && npm run test:integration",
     "test:ci": "jest --coverage --maxWorkers=2"
   },
   "dependencies": {

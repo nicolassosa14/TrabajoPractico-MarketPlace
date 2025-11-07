@@ -45,8 +45,8 @@ describe('UserController', () => {
       const dto: CreateUserRequestDTO = {
         email: 'test@example.com',
         password: 'password123',
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
       };
 
       const mockResponse = {
@@ -74,8 +74,8 @@ describe('UserController', () => {
       const dto: CreateUserRequestDTO = {
         email: 'test@example.com',
         password: 'password123',
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
       };
 
       mockUserService.createUser.mockResolvedValue({});
@@ -85,16 +85,16 @@ describe('UserController', () => {
       const command = mockUserService.createUser.mock.calls[0][0];
       expect(command.getEmail()).toBe('test@example.com');
       expect(command.getPassword()).toBe('password123');
-      expect(command.getFirst_Name()).toBe('John');
-      expect(command.getLast_Name()).toBe('Doe');
+      expect(command.getFirst_Name()).toBe('Pepe');
+      expect(command.getLast_Name()).toBe('Perez');
     });
 
     it('should propagate service errors', async () => {
       const dto: CreateUserRequestDTO = {
         email: 'test@example.com',
         password: 'password123',
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
       };
 
       mockUserService.createUser.mockRejectedValue(
@@ -192,8 +192,8 @@ describe('UserController', () => {
       const mockProfile = {
         id: 1,
         user_id: userId,
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
       };
 
       mockUserService.getUserProfile.mockResolvedValue(mockProfile);
@@ -312,7 +312,7 @@ describe('UserController', () => {
       const mockResponse = {
         id: 1,
         user_id: 'uuid-123',
-        first_name: 'John',
+        first_name: 'Pepe',
         addresses: [
           { id: 1, street_address: '123 Main St' },
           { id: 2, street_address: '456 Oak Ave' },
