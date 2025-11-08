@@ -1,4 +1,3 @@
-// src/modules/payments/presentation/controllers/payments.controller.ts
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CreatePaymentDto } from '../dto/create-payment.dto';
 import { CreatePaymentResponseDto } from '../dto/create-payment-response.dto';

@@ -1,4 +1,3 @@
-// src/modules/payments/infrastructure/repositories/commission.repository.supabase.ts
 import { CommissionRepository } from '../../domain/repositories/commission.repository';
 import { Commission } from '../../domain/entities/commission.entity';
 import { SupabaseClient } from '@supabase/supabase-js';

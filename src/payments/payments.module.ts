@@ -1,4 +1,3 @@
-// src/modules/payments/payments.module.ts
 import { Module } from '@nestjs/common';
 import { PaymentsController } from './presentation/controllers/payments.controller';
 import { CreatePaymentUseCase } from './application/use-cases/create-payment.usecase';
@@ -22,22 +21,20 @@ import { SupabaseModule } from 'src/supabase/supabase.module';
                 provide: 'PaymentRepository',
                 useClass: PaymentRepositorySupabase,
             },
-    // Repositories
-    // dentro de providers: []
+            
     { provide: 'PaymentRepository', useClass: PaymentRepositorySupabase },
     { provide: 'PromotionRepository', useClass: PromotionRepositorySupabase },
     { provide: 'CommissionRepository', useClass: CommissionRepositorySupabase },
 
-    // Domain services
+
     PaymentDomainService,
 
-    // Adapter (MercadoPago) - factory provider to pass token
+  
     {
       provide: 'MercadoPagoAdapter',
       useFactory: () => new MercadoPagoAdapter(),
     },
 
-    // Strategies factory
     {
       provide: 'StrategyFactory',
       useFactory: (mpAdapter: MercadoPagoAdapter) => {
@@ -49,7 +46,7 @@ import { SupabaseModule } from 'src/supabase/supabase.module';
       inject: ['MercadoPagoAdapter'],
     },
 
-    // UseCase
+
     {
       provide: CreatePaymentUseCase,
       useFactory: (

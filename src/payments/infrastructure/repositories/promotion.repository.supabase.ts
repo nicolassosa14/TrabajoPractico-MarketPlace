@@ -1,4 +1,3 @@
-// src/modules/payments/infrastructure/repositories/promotion.repository.supabase.ts
 import { PromotionRepository } from '../../domain/repositories/promotion.repository';
 import { Promotion } from '../../domain/entities/promotion.entity';
 import { Inject, Injectable } from '@nestjs/common';
