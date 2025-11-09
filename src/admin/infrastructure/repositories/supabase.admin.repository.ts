@@ -5,12 +5,10 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseAdminRepository implements AdminRepository {
-  private supabaseAdmin: SupabaseClient;
 
-  constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseClient: SupabaseClient) {
-    const supabaseUrl = 'https://nxilakpwsjqgerrviayg.supabase.co';
-    const serviceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54aWxha3B3c2pxZ2VycnZpYXlnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTc5ODYyMSwiZXhwIjoyMDc1Mzc0NjIxfQ.TW9vsdTCazKHZbucQQik7bOzRPUK1utEm2cmtyJvS5g';
-    this.supabaseAdmin = createClient(supabaseUrl, serviceKey);
+  constructor(@Inject('SUPABASE_CLIENT') private readonly supabaseAdmin: SupabaseClient) 
+  {
+    
   }
 
   async createUser(admin: Admin) {
