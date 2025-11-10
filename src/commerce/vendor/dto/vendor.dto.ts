@@ -1,16 +1,16 @@
-import { IsString, IsNotEmpty, IsNumber, Max, IsEmail } from "class-validator";
+import { IsString, IsNotEmpty, IsNumber, Max, IsEmail } from 'class-validator';
 
 export class createVendorDto {
-    @IsString()
-    @IsNotEmpty() 
-    name: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @Max(100)
-    age: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @Max(100)
+  age: number;
 
-    @IsEmail()
-    @IsNotEmpty() 
-    email: string;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }

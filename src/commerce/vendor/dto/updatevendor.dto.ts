@@ -1,5 +1,5 @@
 export interface updateVendorDto {
-    name?: string;
-    age?: number;
-    email?: string;
+  name?: string;
+  age?: number;
+  email?: string;
 }
