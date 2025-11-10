@@ -1,14 +1,14 @@
 export default class Product {
     constructor(
-        
         private readonly name: string,
         private readonly description: string,
         private readonly image_url: string,
         private readonly price: number,
         private readonly is_available: boolean = true,
-        private readonly vendorName?: string,
-        private readonly category_ids?: string,
+        // normalized parameter order: vendor_id, category_ids, vendorName, id
         private readonly vendor_id?: string,
+        private readonly category_ids?: string,
+        private readonly vendorName?: string,
         private readonly id?: number,
     ) {}
 

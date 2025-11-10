@@ -207,7 +207,7 @@ export const createMockSupabaseClient = () => {
   const database = getGlobalDatabase();
   return {
     auth: {
-      signUp: async (options: { email: string; password: string }) => {
+      signUp: jest.fn(async (options: { email: string; password: string }) => {
         try {
           const { id } = await database.signUp(options.email, options.password);
           return {
@@ -226,9 +226,9 @@ export const createMockSupabaseClient = () => {
             error: { message: error.message },
           };
         }
-      },
+      }),
 
-      signInWithPassword: async (options: { email: string; password: string }) => {
+      signInWithPassword: jest.fn(async (options: { email: string; password: string }) => {
         try {
           const result = await database.signIn(options.email, options.password);
           return {
@@ -241,18 +241,18 @@ export const createMockSupabaseClient = () => {
             error: { message: error.message },
           };
         }
-      },
+      }),
 
-      resend: async (options: { type: string; email: string }) => {
+      resend: jest.fn(async (options: { type: string; email: string }) => {
         return {
           data: { messageId: 'mock-message-id' },
           error: null,
         };
-      },
+      }),
     },
 
-    from: (tableName: string) => ({
-      insert: async (data: any | any[]) => {
+    from: jest.fn((tableName: string) => ({
+      insert: jest.fn(async (data: any | any[]) => {
         if (Array.isArray(data)) {
           const results = [];
           for (const record of data) {
@@ -264,11 +264,11 @@ export const createMockSupabaseClient = () => {
         } else {
           return await database.insert(tableName, data);
         }
-      },
+      }),
 
-      select: (columns?: string) => ({
-        eq: (column: string, value: any) => ({
-          single: async () => {
+      select: jest.fn((columns?: string) => ({
+        eq: jest.fn((column: string, value: any) => ({
+          single: jest.fn(async () => {
             const results = await database.select(tableName, { [column]: value });
             if (results.length === 0) {
               return {
@@ -280,46 +280,46 @@ export const createMockSupabaseClient = () => {
               data: results[0],
               error: null,
             };
-          },
-          then: async () => {
+          }),
+          then: jest.fn(async () => {
             const results = await database.select(tableName, { [column]: value });
             return {
               data: results,
               error: null,
             };
-          },
-        }),
-        then: async () => {
+          }),
+        })),
+        then: jest.fn(async () => {
           const results = await database.select(tableName);
           return {
             data: results,
             error: null,
           };
-        },
-      }),
+        }),
+      })),
 
-      update: (data: any) => ({
-        eq: (column: string, value: any) => ({
-          select: () => ({
-            single: async () => {
+      update: jest.fn((data: any) => ({
+        eq: jest.fn((column: string, value: any) => ({
+          select: jest.fn(() => ({
+            single: jest.fn(async () => {
               const result = await database.update(tableName, data, { [column]: value });
               return {
                 data: result.data,
                 error: result.error,
               };
-            },
-          }),
-        }),
-      }),
+            }),
+          })),
+        })),
+      })),
 
-      delete: () => ({
-        eq: (column: string, value: any) => ({
-          then: async () => {
+      delete: jest.fn(() => ({
+        eq: jest.fn((column: string, value: any) => ({
+          then: jest.fn(async () => {
             return await database.delete(tableName, { [column]: value });
-          },
-        }),
-        neq: (column: string, value: any) => ({
-          then: async () => {
+          }),
+        })),
+        neq: jest.fn((column: string, value: any) => ({
+          then: jest.fn(async () => {
             // Para neq, seleccionamos todos excepto los que coincidan
             const table = database.getTable(tableName);
             const toDelete = Array.from(table.values()).filter(
@@ -327,10 +327,10 @@ export const createMockSupabaseClient = () => {
             );
             toDelete.forEach((item) => table.delete(item.id));
             return { error: null };
-          },
-        }),
-      }),
-    }),
+          }),
+        })),
+      })),
+    })),
 
     // Método para limpiar datos entre tests
     _clearDatabase: () => {

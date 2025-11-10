@@ -23,13 +23,17 @@ export class ProductsService {
       dto.getImageUrl(),
       dto.getPrice(),
       dto.getIsAvailable(),
-      dto.getCategoryIds(),
       dto.getVendorId(),
+      dto.getCategoryIds(),
     );
     const createdProduct = await this.productRepository.createProduct(product);
 
 
     return createdProduct;
+  }
+
+  async findAll() {
+    return this.productRepository.findAll();
   }
 
   

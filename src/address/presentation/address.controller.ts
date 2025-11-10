@@ -38,8 +38,8 @@ export class AddressController {
     return this.addressService.createAddress(command);
   }
 
-  @Get()
-  findAllAddressByUserID(@Body() user_id: string) {
+  @Get(':user_id')
+  findAllAddressByUserID(@Param('user_id') user_id: string) {
     return this.addressService.findAllAddressByUserID(user_id);
   }
 

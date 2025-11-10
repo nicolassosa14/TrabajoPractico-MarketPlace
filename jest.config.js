@@ -6,6 +6,9 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid)/)'
+  ],
   collectCoverageFrom: [
     'src/**/*.(t|j)s',
     '!src/**/*.dto.ts',
