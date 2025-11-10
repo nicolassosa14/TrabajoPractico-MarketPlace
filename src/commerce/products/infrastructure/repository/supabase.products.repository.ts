@@ -41,7 +41,7 @@ export class SupabaseProductRepository implements ProductRepository {
       .insert({
         name: product.getName(),
         description: product.getDescription(),
-        image_url: product.getImageUrl(),
+        Image_url: product.getImageUrl(),
         price: product.getPrice(),
         is_available: product.getIsAvailable(),
         vendor_id: vendorData.id,
@@ -62,6 +62,7 @@ export class SupabaseProductRepository implements ProductRepository {
       productData.is_available,
       productData.vendor_id,
       productData.category_ids,
+      undefined,
       productData.id
     );
   }
@@ -84,6 +85,9 @@ export class SupabaseProductRepository implements ProductRepository {
       data.price,
       data.is_available,
       data.vendor_id,
+      // category_ids may not be selected in all queries
+      (data as any).category_ids ?? undefined,
+      undefined,
       data.id,
     );
   }
@@ -92,16 +96,17 @@ export class SupabaseProductRepository implements ProductRepository {
     const { data, error } = await this.supabase
       .from('products')
       .select('*');
-
     if (error) throw new Error(error.message);
 
     return data.map(p => new Product(
       p.name,
       p.description,
-      p.Image_url,
+      p.image_url,
       p.price,
       p.is_available,
       p.vendor_id,
+      (p as any).category_ids ?? undefined,
+      undefined,
       p.id
     ));
   }
@@ -119,6 +124,8 @@ export class SupabaseProductRepository implements ProductRepository {
       p.price,
       p.is_available,
       p.vendor_id,
+      (p as any).category_ids ?? undefined,
+      undefined,
       p.id
     ));
   }
@@ -137,6 +144,8 @@ export class SupabaseProductRepository implements ProductRepository {
       p.price,
       p.is_available,
       p.vendor_id,
+      (p as any).category_ids ?? undefined,
+      undefined,
       p.id
     ));
 
@@ -160,6 +169,8 @@ export class SupabaseProductRepository implements ProductRepository {
       p.price,
       p.is_available,
       p.vendor_id,
+      (p as any).category_ids ?? undefined,
+      undefined,
       p.id
     ));
   }
@@ -187,6 +198,8 @@ export class SupabaseProductRepository implements ProductRepository {
       data.price,
       data.is_available,
       data.vendor_id,
+      (data as any).category_ids ?? undefined,
+      undefined,
       data.id,
     );
   }
@@ -272,7 +285,7 @@ export class SupabaseProductRepository implements ProductRepository {
       const dto: ProductResponseDTO = {
         name: p.name,
         description: p.description,
-        Image_url: p.Image_url,
+        Image_url: p.image_url,
         price: p.price,
         is_available: p.is_available,
         vendor_id: p.vendor_id,

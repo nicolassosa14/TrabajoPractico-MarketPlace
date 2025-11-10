@@ -3,6 +3,7 @@ import { ProductsService } from '../service/products.service';
 import { CreateProductRequestDTO } from '../presentacion/dto/CreateProductRequest.dto';
 import { UpdateProductDto } from './dto/UpdateProductRequest.dto';
 import CreateProductCommandDTO from '../service/DTO/CreateProductCommand.dto';
+import { find } from 'rxjs';
 
 
 @Controller('products')
@@ -26,8 +27,8 @@ export class ProductsController {
   }
 
   // GET /products?vendorName=...
-  @Get()
-  findAll(@Query('vendorName') vendorName?: string, @Query('categories') category?: string) {
+  @Get('bycategoria')
+  findAllByVendor(@Query('vendorName') vendorName?: string, @Query('categories') category?: string) {
     if (category) {
       return this.productsService.findByCategoryName(category);
     }
@@ -38,6 +39,11 @@ export class ProductsController {
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
+
+  @Get()
+    findAll() {
+    return this.productsService.findAll();
+    }
 
 
   /*@Patch(':id')

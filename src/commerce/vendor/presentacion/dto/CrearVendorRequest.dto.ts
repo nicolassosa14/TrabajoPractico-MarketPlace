@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber, Max, IsEmail } from "class-validator";
+import { IsString, IsNotEmpty, IsNumber, Max, IsEmail, IsBoolean } from "class-validator";
 
 export class createVendorRequestDto {
     @IsString()
@@ -15,8 +15,7 @@ export class createVendorRequestDto {
     address: string;
 
 
-    @IsNumber()
-    @Max(1)
+    @IsBoolean()
     is_active: boolean;
 
     @IsString()

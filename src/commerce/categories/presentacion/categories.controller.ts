@@ -14,8 +14,8 @@ export class CategoriesController {
     const command = new CreateCategoriesCommand(
       dto.name,
       dto.description,
-      dto.image_url,
-      dto.user_id
+      dto.user_id,
+      dto.image_url
     )
     return this.categoriesService.createCategory(command);
   }

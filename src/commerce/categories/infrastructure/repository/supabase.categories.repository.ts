@@ -12,13 +12,13 @@ export class SupabaseCategoryRepository implements CategoryRepository {
 
     async createcategories(categories: categories): Promise<any> {
         const { data: userData, error: userError } = await this.supabaseClient
-            .from('profiles')
+            .from('user_profiles')
             .select('role')
-            .eq('id', categories.getUserId())
+            .eq('user_id', categories.getUserId())
             .single();
 
-        if (userError || !userData || userData.role !== 'admin') {
-            throw new Error('Acción no permitida. Se requiere rol de administrador.');
+        if (userError || !userData || userData.role !== 'backoffice') {
+            throw new Error('Acción no permitida. Se requiere rol de administrador.' + userError?.message);
         }
         const { data: insertarData, error: errorInsert } = await this.supabaseClient
             .from('categories')
