@@ -14,14 +14,15 @@ export class CategoriesController {
     const command = new CreateCategoriesCommand(
       dto.name,
       dto.description,
+      dto.image_url,
       dto.user_id
     )
     return this.categoriesService.createCategory(command);
   }
 
   @Get()
-  findAll(@Query('name') name?:string) {
-    return this.categoriesService.findAll(name);
+  findAll(@Query('name') name?:string , @Query('image_url') image_url?:string) {
+    return this.categoriesService.findAll(name, image_url);
   }
 
   @Patch(':id')

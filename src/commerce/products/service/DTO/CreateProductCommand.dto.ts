@@ -6,6 +6,7 @@ export default class CreateProductCommandDTO {
     public readonly is_available: boolean = true;
     public readonly vendor_id : string;
     public readonly category_ids: string;
+    public readonly vendor_name: string;
 
     getName(): string {
         return this.name;

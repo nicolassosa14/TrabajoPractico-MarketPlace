@@ -25,7 +25,7 @@ export class SupabaseVendorRepository implements VendorRepository {
         const { data: profileData, error: profileError } = await this.supabaseClient
             .from('user_profiles')
             .select('role')
-            .eq('id', vendor.getUserId())
+            .eq('user_id', vendor.getUserId())
             .single();
 
         if (profileError || !profileData || profileData.role !== 'vendor') {
@@ -38,8 +38,9 @@ export class SupabaseVendorRepository implements VendorRepository {
                 name: vendor.getName(),
                 description: vendor.getDescription(),
                 address: vendor.getAddress(),
-                is_active: vendor.getisActive(),
+                is_active: vendor.getIsActive(),
                 user_id: vendor.getUserId(),
+                Image_url: vendor.getImageUrl(),
             })
             .select()
             .single();
@@ -58,7 +59,8 @@ export class SupabaseVendorRepository implements VendorRepository {
                 name: command.getName(),
                 address: command.getAddress(),
                 descripcion: command.getDescription(),
-                is_active: command.getisActive(),
+                is_active: command.getIsActive(),
+                image_url: command.getImageUrl(),
             })
 
             .eq('id', command.getId())
@@ -93,20 +95,7 @@ export class SupabaseVendorRepository implements VendorRepository {
         return data;
     }
 
-    async findByEmail(email: string): Promise<Vendor> {
-        const { data, error } = await this.supabaseClient
-            .from('vendors')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-        if (error) {
-            throw new Error('Vendor no encontrado: ' + error.message)
-        }
-
-        return data;
-
-    }
+ 
 
 
     async findById(id: number): Promise<Vendor> {
@@ -133,12 +122,13 @@ export class SupabaseVendorRepository implements VendorRepository {
         }
 
         return data.map(v => new Vendor(
+            v.name,
             v.description,
             v.address,
             v.is_active,
             v.user_id,
-            v.name,
-            v.id
+            v.Image_url,
+            v.id,
         ));
     }
 

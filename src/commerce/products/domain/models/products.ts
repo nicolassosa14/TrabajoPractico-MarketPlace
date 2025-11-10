@@ -6,6 +6,7 @@ export default class Product {
         private readonly image_url: string,
         private readonly price: number,
         private readonly is_available: boolean = true,
+        private readonly vendorName?: string,
         private readonly category_ids?: string,
         private readonly vendor_id?: string,
         private readonly id?: number,
@@ -43,5 +44,7 @@ export default class Product {
     public getCategoryIds(): string| undefined {
         return this.category_ids;
     }
-    
+    public getVendorName(): string | undefined {
+        return this.vendorName;
+    }
 }

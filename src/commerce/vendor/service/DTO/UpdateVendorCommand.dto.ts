@@ -6,8 +6,9 @@ export default class UpdatePatchVendorCommand {
     private readonly description?: string;
     private readonly address?: string;
     private readonly is_active?: boolean;
+    private readonly image_url?: string;
 
-    public constructor(id: number, name?: string, email?: string, password?: string, description?: string, address?: string, is_active?: boolean) {
+    public constructor(id: number, name?: string, email?: string, password?: string, description?: string, address?: string, is_active?: boolean, image_url?: string) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -15,6 +16,7 @@ export default class UpdatePatchVendorCommand {
         this.description = description;
         this.address = address;
         this.is_active = is_active;
+        this.image_url = image_url;
     }
     public getId(): number {
         return this.id;
@@ -38,6 +40,10 @@ export default class UpdatePatchVendorCommand {
         return this.is_active;
     }
 
+    public getImageUrl(): string | undefined {
+        return this.image_url;
+    }
+
 }
 
 export class UpdatePutVendorCommand {
@@ -48,8 +54,10 @@ export class UpdatePutVendorCommand {
     private readonly description: string;
     private readonly address: string;
     private readonly is_active: boolean;
+    private readonly image_url: string;
 
-    public constructor(id: number, name: string, email: string, password: string, description: string, address: string, is_active: boolean) {
+
+    public constructor(id: number, name: string, email: string, password: string, description: string, address: string, is_active: boolean, image_url: string) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -57,6 +65,7 @@ export class UpdatePutVendorCommand {
         this.description = description;
         this.address = address;
         this.is_active = is_active;
+        this.image_url = image_url;
     }
     public getId(): number {
         return this.id;
@@ -79,4 +88,8 @@ export class UpdatePutVendorCommand {
     public getIsActive(): boolean {
         return this.is_active;
     }
+    public getImageUrl(): string {
+        return this.image_url;
+    }
+
 }

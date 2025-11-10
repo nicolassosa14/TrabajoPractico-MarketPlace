@@ -5,6 +5,5 @@ export interface VendorRepository {
     update(vendor: Vendor): Promise<Vendor>;
     updatePartial(vendor: UpdatePatchVendorCommand): Promise<any>;
     findById(id: number): Promise<Vendor | null>;
-    findByEmail(email: string): Promise<Vendor | null>;
     findAll(): Promise<Vendor[]>;
 }

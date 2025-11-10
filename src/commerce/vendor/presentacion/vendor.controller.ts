@@ -12,7 +12,7 @@ export class VendorController {
 
     @Post()
     async create(@Body() dto: createVendorRequestDto) {
-        const command = new CreateVendorCommand(dto.name, dto.description, dto.address, dto.user_id, dto.is_active);
+        const command = new CreateVendorCommand(dto.name, dto.description, dto.address, dto.is_active, dto.user_id, dto.image_url);
         return this.vendorService.createVendor(command);
     }
 
@@ -20,6 +20,8 @@ export class VendorController {
     async findById(@Param('id', ParseIntPipe) id: number) {
         return this.vendorService.findById(id);
     }
+
+  
 
     @Get()
     async findAll() {
@@ -31,7 +33,7 @@ export class VendorController {
         @Param('id', ParseIntPipe) id: number,
         @Body() dto: PutVendorRequestDTO
     ) {
-        const command = new UpdatePutVendorCommand(id, dto.name, dto.email, dto.password, dto.descripcion, dto.address, dto.is_active);
+        const command = new UpdatePutVendorCommand(id, dto.name, dto.email, dto.password, dto.descripcion, dto.address, dto.is_active, dto.image_url);
         return this.vendorService.update(command);
     }
 

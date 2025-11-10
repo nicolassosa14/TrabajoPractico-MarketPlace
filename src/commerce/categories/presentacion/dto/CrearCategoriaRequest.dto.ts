@@ -9,6 +9,10 @@ export class CreateCategoryRequestDto {
     @IsString()
     description: string;
 
+    @IsNotEmpty()
+    @IsString()
+    image_url: string;
+
     @IsString()
     @IsNotEmpty() 
     user_id: string;
