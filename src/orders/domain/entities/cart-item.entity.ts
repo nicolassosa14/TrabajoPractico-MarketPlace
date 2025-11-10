@@ -3,6 +3,6 @@ export class CartItem{
         public userId: string,
         public productId: string,
         public quantity: number,
-        public addedAt: number,
+        public addedAt: Date,
     ) {}
 }

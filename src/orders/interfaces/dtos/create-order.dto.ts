@@ -25,6 +25,4 @@ export class CreateOrderDto {
 
     @IsNumber()
     totalAmount: number;
-
-    @IsEnum(OrderStatus) status: OrderStatus;
 }
