@@ -1,14 +1,15 @@
 import { UserRepository } from 'src/user/domain/contract/user.repository';
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import User from '../../domain/modelos/user';
+import User from '../../domain/models/user';
 
 //eliminar
-import DeleteUserCommand from 'src/user/service/DTO/DeleteUser.dto';
-import UpdatePutUserCommand from 'src/user/service/DTO/UpdateUser.dto';
-import UpdatePatchUserCommand from 'src/user/service/DTO/UpdateUser.dto';
+import DeleteUserCommand from 'src/user/service/dto/DeleteUser.dto';
+import UpdatePutUserCommand from 'src/user/service/dto/UpdateUser.dto';
+import UpdatePatchUserCommand from 'src/user/service/dto/UpdateUser.dto';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { exec } from 'node:child_process';
+import { profile } from 'node:console';
 //
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
@@ -24,8 +25,50 @@ export class SupabaseUserRepository implements UserRepository {
     if (error) {
       throw new Error('Usuario no creado: ' + error.message);
     }
+    let newuuid = data.user?.id
+
+    if(!newuuid){
+      throw new Error('El perfil no se pudo crear');
+    }
+    
+    await this.createProfile(user, newuuid)
+
     return data;
   }
+
+  async createProfile(user: User, id: string) {
+    const { error: profileError } = await this.supabaseClient.from('user_profiles').insert({
+        user_id: id,
+        first_name: user.getFirst_Name(),
+        last_name: user.getLast_Name(),
+        role: 'customer',
+        email: user.getEmail()
+      });
+      if (profileError){
+          throw new Error('Error al crear perfil: ' + profileError.message);
+      }
+      else {
+        return true;
+      }
+  }
+
+  async EditUserProfile(id: number, user: User): Promise<any> {
+    
+  }
+
+  async getUserProfile(user_id: string): Promise<any> {
+
+    const { data, error } = await this.supabaseClient
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user_id)
+      .single();
+      if (error) {
+        throw new Error('Perfil no encontrado: ' + error.message);
+      }
+      return data;
+  }
+
   async resendVerificationEmail(email: string): Promise<any>{
     let { data, error } = await this.supabaseClient.auth.resend({
       type: 'signup',
@@ -36,6 +79,14 @@ export class SupabaseUserRepository implements UserRepository {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
 
+    return data;
+  }
+//ver como implementar bien
+  async VerificationStatus(email: string): Promise<any>{
+    let { data, error } = await this.supabaseClient.auth.getUser()
+    if(error){
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
     return data;
   }
 
@@ -63,13 +114,14 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
+  //POR EL MOMENTO NO SE USA
   async update(command: UpdatePutUserCommand): Promise<any> {
     const { data, error } = await this.supabaseClient
       .from('users')
       .update({
         name: command.getName(),
         email: command.getEmail(),
-        phone: command.getPhone(),
+        phone_number: command.getPhone(),
       })
       .eq('id', command.getId())
       .select();
@@ -93,16 +145,30 @@ export class SupabaseUserRepository implements UserRepository {
       .eq('id', command.getId())
       .select();
 
-    if (error) {
-      throw new Error('Usuario no actualizado (PATCH): ' + error.message);
+            if (searchError || !existingUser) {
+                throw new Error(`Usuario no encontrado con ID: ${id}`);
+            }
+            const { data, error } = await this.supabaseClient
+                .from('user_profiles')
+                .update(partialUser)
+                .eq('user_id', id)
+                .select()
+                .single();
+
+            if (error) {
+                throw new Error(`Error actualizando usuario: ${error.message}`);
+            }
+
+            return data;
+        } catch (error) {
+            throw new Error(`Error en updatePartial: ${error.message}`);
+        }
     }
-    return data;
-  }
 
 
   async findById(id: number): Promise<any> {
     const { data, error } = await this.supabaseClient
-      .from('users')
+      .from('user_profiles')
       .select('*')
       .eq('id', id)
       .single();
@@ -113,17 +179,17 @@ export class SupabaseUserRepository implements UserRepository {
     return data;
   }
 
-
-async delete(id: number): Promise<any> {
+//terminar
+async delete(user_id: string): Promise<any> {
         const { data, error } = await this.supabaseClient
             .from('users')
             .delete()
-            .eq('id', id);
+            .eq('id', user_id);
         
         if (error) throw error;
         return data;
     }
-
+    //no creo que se use
     async updateUser(user: User): Promise<User> {
         const { data, error } = await this.supabaseClient
             .from('users')
@@ -135,15 +201,29 @@ async delete(id: number): Promise<any> {
         if (error) throw error;
         return data;
     }
-
-    async updatePartial(user: User): Promise<any> {
+    //NO SE SI VAN TODAVIA, O SON DE OTRO MODULO
+    async addFavoriteVendor(user_id: string, vendor_id: string) {
         const { data, error } = await this.supabaseClient
-            .from('users')
-            .update(user)
-            .eq('id', user.getId())
-            .select()
-            .single();
-        
+            .from('user_favorite_vendors')
+            .insert({ user_id, vendor_id });
+        if (error) throw error;
+        return data;
+    }
+    async removeFavoriteVendor(user_id: string, vendor_id: string) {
+        const { data, error } = await this.supabaseClient
+            .from('user_favorite_vendors')
+            .delete()
+            .eq('user_id', user_id)
+            .eq('vendor_id', vendor_id);
+        if (error) throw error;
+        return data;
+    }
+    //
+
+    async addAdresss(user_id: string, street_address: string, city: string, postal_code: string, details: string) {
+        const { data, error } = await this.supabaseClient
+            .from('addresses')
+            .insert({ user_id, street_address, city, postal_code, details });
         if (error) throw error;
         return data;
     }
