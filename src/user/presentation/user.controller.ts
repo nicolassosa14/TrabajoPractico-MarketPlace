@@ -45,19 +45,20 @@ export class UserController {
   async resendVerificationEmailRequest(@Param('email') email: string) {
     return this.userService.resendVerificationEmail(email);
   }
-  @Get('/verification-status/:email')
-  async VerificationStatusRequest(@Param('email') email: string) {
-    return this.userService.VerificationStatus(email);
-  }
 
   @Get('/profile/:user_id')
   async getUserProfileRequest(@Param('user_id') user_id: string) {
+    if (!user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     return this.userService.getUserProfile(user_id);
   }
 
   @Patch('/profile')
   async EditUserInfoRequest(@Body() dto: PatchUserRequestDTO) {
-    // objeto solo con los campos que se enviaron
+    if (!dto.user_id) {
+      throw new BadRequestException('Se requiere el ID del usuario');
+    }
     const updateData: Partial<PatchUserRequestDTO> = {};
 
     if (dto.email !== undefined) updateData.email = dto.email;
@@ -80,5 +81,26 @@ export class UserController {
   @Get('/profile-with-addresses/:user_id')
   async getUserProfileWithAddresses(@Param('user_id') user_id: string) {
     return this.userService.getUserWithAddresses(user_id);
+  }
+
+  @Post('/favorite-vendors/:user_id/:vendor_id')
+  async addFavoriteVendorRequest(
+    @Param('user_id') user_id: string,
+    @Param('vendor_id') vendor_id: string,
+  ) {
+    return this.userService.addFavoriteVendor(user_id, vendor_id);
+  }
+
+  @Delete('/favorite-vendors/:user_id/:vendor_id')
+  async removeFavoriteVendorRequest(
+    @Param('user_id') user_id: string,
+    @Param('vendor_id') vendor_id: string,
+  ) {
+    return this.userService.removeFavoriteVendor(user_id, vendor_id);
+  }
+
+  @Get('/favorite-vendors/:user_id')
+  async getUserFavoriteVendors(@Param('user_id') user_id: string) {
+    return this.userService.getUserFavoriteVendors(user_id);
   }
 }

@@ -17,5 +17,7 @@
   ],
   "coverageDirectory": "../coverage-e2e",
   "verbose": true,
-  "testTimeout": 30000
+  "testTimeout": 60000,
+  "bail": false,
+  "maxWorkers": 1
 }

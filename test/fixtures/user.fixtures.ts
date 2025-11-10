@@ -7,10 +7,10 @@ import LoginUserCommand from '../../src/user/service/dto/LoginUser.dto';
  */
 
 export const validUserData = {
-  email: 'john.doe@example.com',
+  email: 'Pepe.doe@example.com',
   password: 'SecurePassword123!',
-  first_name: 'John',
-  last_name: 'Doe',
+  first_name: 'Pepe',
+  last_name: 'Perez',
   phone_number: 1234567890,
 };
 
@@ -25,28 +25,28 @@ export const validUserData2 = {
 export const invalidUserDataMissingEmail = {
   email: '',
   password: 'SecurePassword123!',
-  first_name: 'John',
-  last_name: 'Doe',
+  first_name: 'Pepe',
+  last_name: 'Perez',
 };
 
 export const invalidUserDataMissingPassword = {
-  email: 'john.doe@example.com',
+  email: 'Pepe.doe@example.com',
   password: '',
-  first_name: 'John',
-  last_name: 'Doe',
+  first_name: 'Pepe',
+  last_name: 'Perez',
 };
 
 export const invalidUserDataMissingFirstName = {
-  email: 'john.doe@example.com',
+  email: 'Pepe.doe@example.com',
   password: 'SecurePassword123!',
   first_name: '',
-  last_name: 'Doe',
+  last_name: 'Perez',
 };
 
 export const invalidUserDataMissingLastName = {
-  email: 'john.doe@example.com',
+  email: 'Pepe.doe@example.com',
   password: 'SecurePassword123!',
-  first_name: 'John',
+  first_name: 'Pepe',
   last_name: '',
 };
 

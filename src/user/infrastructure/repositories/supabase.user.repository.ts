@@ -87,14 +87,6 @@ export class SupabaseUserRepository implements UserRepository {
 
     return data;
   }
-  //ver como implementar bien
-  async VerificationStatus(email: string): Promise<any> {
-    const { data, error } = await this.supabaseClient.auth.getUser();
-    if (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-    }
-    return data;
-  }
 
   async loginUser(user: User): Promise<any> {
     const { data, error } = await this.supabaseClient.auth.signInWithPassword({
@@ -104,37 +96,6 @@ export class SupabaseUserRepository implements UserRepository {
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-    }
-    return data;
-  }
-
-  //VER
-  async deleteUser(user: User): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .delete()
-      .eq('id', user.getId());
-
-    if (error) {
-      throw new Error('Usuario no eliminado: ' + error.message);
-    }
-    return data;
-  }
-
-  //POR EL MOMENTO NO SE USA
-  async update(command: UpdatePutUserCommand): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .update({
-        name: command.getName(),
-        email: command.getEmail(),
-        phone_number: command.getPhone(),
-      })
-      .eq('id', command.getId())
-      .select();
-
-    if (error) {
-      throw new Error('Usuario no actualizado: ' + error.message);
     }
     return data;
   }
@@ -163,7 +124,7 @@ export class SupabaseUserRepository implements UserRepository {
           .single();
 
       if (searchError || !existingUser) {
-        throw new Error(`Usuario no encontrado con ID: ${id}`);
+        throw new BadRequestException(`Usuario no encontrado con ID: ${id}`);
       }
       const { data, error } = await this.supabaseClient
         .from('user_profiles')
@@ -173,12 +134,12 @@ export class SupabaseUserRepository implements UserRepository {
         .single();
 
       if (error) {
-        throw new Error(`Error actualizando usuario: ${error.message}`);
+        throw new BadRequestException(`Error actualizando usuario: ${error.message}`);
       }
 
       return data;
     } catch (error) {
-      throw new Error(`Error en updatePartial: ${error.message}`);
+      throw new BadRequestException(`Error en updatePartial: ${error.message}`);
     }
   }
 
@@ -190,63 +151,85 @@ export class SupabaseUserRepository implements UserRepository {
       .single();
 
     if (error) {
-      throw new Error('Usuario no encontrado: ' + error.message);
+      throw new BadRequestException('Usuario no encontrado: ' + error.message);
     }
     return data;
   }
 
-  //terminar
-  async delete(user_id: string): Promise<any> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .delete()
-      .eq('id', user_id);
+  private async checkFavoriteVendor(user_id: string, vendor_id: string): Promise<boolean> {
+    const { data: verify, error: errorVerify } = await this.supabaseClient
+      .from('user_favorite_vendors')
+      .select('*')
+      .eq('user_id', user_id)
+      .eq('vendor_id', vendor_id);
 
-    if (error) throw error;
-    return data;
-  }
-  //no creo que se use
-  async updateUser(user: User): Promise<User> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .update(user)
-      .eq('id', user.getId())
-      .select()
-      .single();
+    if (errorVerify) {
+      throw new BadRequestException('Error al verificar favorito: ' + errorVerify.message);
+    }
 
-    if (error) throw error;
-    return data;
+    return verify && verify.length > 0;
   }
-  //NO SE SI VAN TODAVIA, O SON DE OTRO MODULO
+
   async addFavoriteVendor(user_id: string, vendor_id: string) {
+    const isFavorite = await this.checkFavoriteVendor(user_id, vendor_id);
+
+    if (isFavorite) {
+      throw new BadRequestException('Este vendedor ya está en tus favoritos');
+    }
+
     const { data, error } = await this.supabaseClient
       .from('user_favorite_vendors')
       .insert({ user_id, vendor_id });
-    if (error) throw error;
-    return data;
+
+    if (error) {
+      throw new BadRequestException('No se pudo agregar el vendedor a favoritos: ' + error.message);
+    }
+
+    return 'Vendedor agregado a favoritos';
   }
+
   async removeFavoriteVendor(user_id: string, vendor_id: string) {
-    const { data, error } = await this.supabaseClient
+    const isFavorite = await this.checkFavoriteVendor(user_id, vendor_id);
+
+    if (!isFavorite) {
+      throw new BadRequestException('Este vendedor no está en tus favoritos');
+    }
+
+    const { error } = await this.supabaseClient
       .from('user_favorite_vendors')
       .delete()
       .eq('user_id', user_id)
       .eq('vendor_id', vendor_id);
-    if (error) throw error;
-    return data;
-  }
-  //
 
-  async addAdresss(
-    user_id: string,
-    street_address: string,
-    city: string,
-    postal_code: string,
-    details: string,
-  ) {
+    if (error) {
+      throw new BadRequestException('Error al eliminar el vendedor de favoritos: ' + error.message);
+    }
+
+    return 'Vendedor eliminado de favoritos';
+  }
+
+  async getFavoriteVendorsByUserID(user_id: string): Promise<any[]> {
     const { data, error } = await this.supabaseClient
-      .from('addresses')
-      .insert({ user_id, street_address, city, postal_code, details });
-    if (error) throw error;
-    return data;
+      .from('user_favorite_vendors')
+      .select('vendor_id')
+      .eq('user_id', user_id);
+    if (error) {
+        throw new BadRequestException('No se pudo obtener la lista de vendedores favoritos: ' + error.message);
+    }
+
+    if (!data || data.length === 0) {
+        return [];
+    }
+    
+    const vendorIds = data.map((item) => item.vendor_id);
+    const { data: vendorinfo, error: vendorError } = await this.supabaseClient
+      .from('vendors')
+      .select('*')
+      .in('id', vendorIds);
+    if (vendorError) {
+        throw new BadRequestException('No se pudo obtener la información de los vendedores favoritos: ' + vendorError.message);
+    }
+
+    return vendorinfo;
   }
 }

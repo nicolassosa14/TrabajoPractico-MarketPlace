@@ -1,16 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../../src/app.module';
+import { UserModule } from '../../src/user/user.module';
+import { AddressModule } from '../../src/address/address.module';
+import { SupabaseModule } from '../../src/supabase/supabase.module';
 import { generateTestEmail } from '../helpers/test.helper';
+import { createMockSupabaseClient } from '../mocks/supabase.mock';
 
 describe('User-Address Integration Flow (E2E)', () => {
   let app: INestApplication;
+  let mockSupabaseClient: any;
 
   beforeAll(async () => {
+    // Crear mock de Supabase
+    mockSupabaseClient = createMockSupabaseClient();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+      imports: [SupabaseModule, UserModule, AddressModule],
+    })
+      .overrideProvider('SUPABASE_CLIENT')
+      .useValue(mockSupabaseClient)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -18,6 +28,7 @@ describe('User-Address Integration Flow (E2E)', () => {
   });
 
   afterAll(async () => {
+    mockSupabaseClient._clearDatabase();
     await app.close();
   });
 
@@ -61,8 +72,7 @@ describe('User-Address Integration Flow (E2E)', () => {
 
     it('Step 3: User gets their profile', async () => {
       const response = await request(app.getHttpServer())
-        .get('/users/profile')
-        .send(userId)
+        .get(`/users/profile/${userId}`)
         .expect(200);
 
       expect(response.body).toHaveProperty('user_id', userId);
@@ -78,6 +88,8 @@ describe('User-Address Integration Flow (E2E)', () => {
           street_address: '742 Evergreen Terrace',
           city: 'Springfield',
           postal_code: '58008',
+          lat: 39.78,
+          long: -89.65,
           details: 'Home address - Ring doorbell twice',
         })
         .expect(201);
@@ -93,6 +105,8 @@ describe('User-Address Integration Flow (E2E)', () => {
           street_address: '1000 Corporate Blvd',
           city: 'Springfield',
           postal_code: '58009',
+          lat: 39.79,
+          long: -89.66,
           details: 'Work - Office 301',
         })
         .expect(201);
@@ -108,6 +122,8 @@ describe('User-Address Integration Flow (E2E)', () => {
           street_address: '5000 Beach Road',
           city: 'Coastal Town',
           postal_code: '90210',
+          lat: 33.97,
+          long: -118.24,
           details: 'Summer house - Key under mat',
         })
         .expect(201);
@@ -116,7 +132,8 @@ describe('User-Address Integration Flow (E2E)', () => {
     it('Step 7: User retrieves all their addresses', async () => {
       const response = await request(app.getHttpServer())
         .get('/address')
-        .send(userId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userId })
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
@@ -154,8 +171,7 @@ describe('User-Address Integration Flow (E2E)', () => {
 
     it('Step 9: User gets profile with all addresses in one call', async () => {
       const response = await request(app.getHttpServer())
-        .get('/users/profile-with-addresses')
-        .send({ user_id: userId })
+        .get(`/users/profile-with-addresses/${userId}`)
         .expect(200);
 
       expect(response.body).toHaveProperty('user_id', userId);
@@ -198,6 +214,8 @@ describe('User-Address Integration Flow (E2E)', () => {
         street_address: 'User1 Street',
         city: 'City1',
         postal_code: '11111',
+        lat: 40.0,
+        long: -90.0,
       });
 
       // Usuario 2 agrega dirección
@@ -206,12 +224,15 @@ describe('User-Address Integration Flow (E2E)', () => {
         street_address: 'User2 Street',
         city: 'City2',
         postal_code: '22222',
+        lat: 40.1,
+        long: -90.1,
       });
 
       // Verificar que Usuario 1 solo ve su dirección
       const user1Addresses = await request(app.getHttpServer())
         .get('/address')
-        .send(user1Id);
+        .set('Content-Type', 'application/json')
+        .send({ user_id: user1Id });
 
       expect(user1Addresses.body.length).toBeGreaterThanOrEqual(1);
       user1Addresses.body.forEach((addr: any) => {
@@ -222,7 +243,8 @@ describe('User-Address Integration Flow (E2E)', () => {
       // Verificar que Usuario 2 solo ve su dirección
       const user2Addresses = await request(app.getHttpServer())
         .get('/address')
-        .send(user2Id);
+        .set('Content-Type', 'application/json')
+        .send({ user_id: user2Id });
 
       expect(user2Addresses.body.length).toBeGreaterThanOrEqual(1);
       user2Addresses.body.forEach((addr: any) => {
@@ -241,8 +263,10 @@ describe('User-Address Integration Flow (E2E)', () => {
           street_address: '123 Nonexistent User St',
           city: 'Nowhere',
           postal_code: '00000',
+          lat: 40.2,
+          long: -90.2,
         })
-        .expect(500); // Foreign key constraint error
+        .expect(400); // Validación de user_id
     });
 
     it('should handle duplicate address for same user', async () => {
@@ -262,6 +286,8 @@ describe('User-Address Integration Flow (E2E)', () => {
         street_address: '999 Duplicate St',
         city: 'DupCity',
         postal_code: '99999',
+        lat: 40.3,
+        long: -90.3,
       };
 
       // Primera creación exitosa
@@ -286,6 +312,8 @@ describe('User-Address Integration Flow (E2E)', () => {
           street_address: '123 Test',
           city: 'Test',
           postal_code: '12345',
+          lat: 40.4,
+          long: -90.4,
         })
         .expect(400);
 
@@ -321,6 +349,8 @@ describe('User-Address Integration Flow (E2E)', () => {
               street_address: `${i}00 Street Number ${i}`,
               city: `City${i}`,
               postal_code: `${i}0000`,
+              lat: 40.0 + i * 0.1,
+              long: -90.0 + i * 0.1,
               details: `Address ${i} details`,
             }),
         );
@@ -331,7 +361,8 @@ describe('User-Address Integration Flow (E2E)', () => {
       // Verificar que todas se crearon
       const response = await request(app.getHttpServer())
         .get('/address')
-        .send(userId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userId })
         .expect(200);
 
       expect(response.body.length).toBe(10);
@@ -357,6 +388,8 @@ describe('User-Address Integration Flow (E2E)', () => {
         street_address: '123 Consistency St',
         city: 'ConsCity',
         postal_code: '12345',
+        lat: 40.5,
+        long: -90.5,
       });
 
       // Actualizar perfil
@@ -368,7 +401,8 @@ describe('User-Address Integration Flow (E2E)', () => {
       // Verificar que la dirección sigue vinculada al usuario
       const addressResponse = await request(app.getHttpServer())
         .get('/address')
-        .send(userId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userId })
         .expect(200);
 
       expect(addressResponse.body.length).toBeGreaterThanOrEqual(1);
@@ -376,8 +410,7 @@ describe('User-Address Integration Flow (E2E)', () => {
 
       // Verificar que el perfil con direcciones muestra el nombre actualizado
       const profileResponse = await request(app.getHttpServer())
-        .get('/users/profile-with-addresses')
-        .send({ user_id: userId })
+        .get(`/users/profile-with-addresses/${userId}`)
         .expect(200);
 
       expect(profileResponse.body.first_name).toBe('Updated');

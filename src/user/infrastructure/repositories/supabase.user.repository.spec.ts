@@ -34,7 +34,7 @@ describe('SupabaseUserRepository', () => {
 
   describe('createUser', () => {
     it('should create a user successfully', async () => {
-      const user = new User('test@example.com', 'password123', 'John', 'Doe');
+      const user = new User('test@example.com', 'password123', 'Pepe', 'Perez');
 
       const mockSignUpResponse = {
         data: {
@@ -64,7 +64,7 @@ describe('SupabaseUserRepository', () => {
     });
 
     it('should throw error when auth.signUp fails', async () => {
-      const user = new User('test@example.com', 'password123', 'John', 'Doe');
+      const user = new User('test@example.com', 'password123', 'Pepe', 'Perez');
 
       mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: { user: null, session: null },
@@ -77,7 +77,7 @@ describe('SupabaseUserRepository', () => {
     });
 
     it('should throw error when user.id is not returned', async () => {
-      const user = new User('test@example.com', 'password123', 'John', 'Doe');
+      const user = new User('test@example.com', 'password123', 'Pepe', 'Perez');
 
       mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: { user: { id: null }, session: null },
@@ -90,7 +90,7 @@ describe('SupabaseUserRepository', () => {
     });
 
     it('should call createProfile after successful signUp', async () => {
-      const user = new User('test@example.com', 'password123', 'John', 'Doe');
+      const user = new User('test@example.com', 'password123', 'Pepe', 'Perez');
 
       mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: {
@@ -110,16 +110,17 @@ describe('SupabaseUserRepository', () => {
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('user_profiles');
       expect(mockFrom.insert).toHaveBeenCalledWith({
         user_id: 'uuid-123',
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
         role: 'customer',
+        email: 'test@example.com',
       });
     });
   });
 
   describe('createProfile', () => {
     it('should create user profile successfully', async () => {
-      const user = new User('test@example.com', 'password', 'John', 'Doe');
+      const user = new User('test@example.com', 'password', 'Pepe', 'Perez');
       const userId = 'uuid-123';
 
       const mockFrom = {
@@ -133,14 +134,15 @@ describe('SupabaseUserRepository', () => {
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('user_profiles');
       expect(mockFrom.insert).toHaveBeenCalledWith({
         user_id: userId,
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
         role: 'customer',
+        email: 'test@example.com',
       });
     });
 
     it('should throw error when profile creation fails', async () => {
-      const user = new User('test@example.com', 'password', 'John', 'Doe');
+      const user = new User('test@example.com', 'password', 'Pepe', 'Perez');
       const userId = 'uuid-123';
 
       mockSupabaseClient.from.mockReturnValue({
@@ -218,8 +220,8 @@ describe('SupabaseUserRepository', () => {
       const mockProfile = {
         id: 1,
         user_id: userId,
-        first_name: 'John',
-        last_name: 'Doe',
+        first_name: 'Pepe',
+        last_name: 'Perez',
         email: 'test@example.com',
       };
 
@@ -300,7 +302,7 @@ describe('SupabaseUserRepository', () => {
         phone_number: 1234567890,
       };
 
-      const mockExistingUser = { id: 1, user_id: userId, first_name: 'John' };
+      const mockExistingUser = { id: 1, user_id: userId, first_name: 'Pepe' };
       const mockUpdatedUser = { ...mockExistingUser, ...partialUpdate };
 
       const mockSelectChain = {
@@ -389,7 +391,7 @@ describe('SupabaseUserRepository', () => {
   describe('findById', () => {
     it('should find user by id successfully', async () => {
       const userId = 1;
-      const mockUser = { id: userId, first_name: 'John' };
+      const mockUser = { id: userId, first_name: 'Pepe' };
 
       const mockChain = {
         select: jest.fn().mockReturnThis(),

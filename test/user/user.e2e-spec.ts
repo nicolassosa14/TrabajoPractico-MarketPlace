@@ -1,20 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { UserModule } from '../../src/user/user.module';
 import { SupabaseModule } from '../../src/supabase/supabase.module';
 import { AddressModule } from '../../src/address/address.module';
 import { generateTestEmail } from '../helpers/test.helper';
+import { createMockSupabaseClient } from '../mocks/supabase.mock';
 
 describe('User Module (E2E)', () => {
   let app: INestApplication;
   let createdUserId: string;
   let accessToken: string;
+  let mockSupabaseClient: any;
 
   beforeAll(async () => {
+    // Crear mock de Supabase
+    mockSupabaseClient = createMockSupabaseClient();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [SupabaseModule, UserModule, AddressModule],
-    }).compile();
+    })
+      .overrideProvider('SUPABASE_CLIENT')
+      .useValue(mockSupabaseClient)
+      .compile();
 
     app = moduleFixture.createNestApplication();
 
@@ -25,6 +33,7 @@ describe('User Module (E2E)', () => {
   });
 
   afterAll(async () => {
+    mockSupabaseClient._clearDatabase();
     await app.close();
   });
 
@@ -37,8 +46,8 @@ describe('User Module (E2E)', () => {
         .send({
           email: testEmail,
           password: 'TestPassword123!',
-          first_name: 'John',
-          last_name: 'Doe',
+          first_name: 'Pepe',
+          last_name: 'Perez',
         })
         .expect(201)
         .then((response) => {
@@ -56,8 +65,8 @@ describe('User Module (E2E)', () => {
         .post('/users')
         .send({
           password: 'TestPassword123!',
-          first_name: 'John',
-          last_name: 'Doe',
+          first_name: 'Pepe',
+          last_name: 'Perez',
         })
         .expect(400);
     });
@@ -67,8 +76,8 @@ describe('User Module (E2E)', () => {
         .post('/users')
         .send({
           email: generateTestEmail(),
-          first_name: 'John',
-          last_name: 'Doe',
+          first_name: 'Pepe',
+          last_name: 'Perez',
         })
         .expect(400);
     });
@@ -79,7 +88,7 @@ describe('User Module (E2E)', () => {
         .send({
           email: generateTestEmail(),
           password: 'TestPassword123!',
-          last_name: 'Doe',
+          last_name: 'Perez',
         })
         .expect(400);
     });
@@ -90,7 +99,7 @@ describe('User Module (E2E)', () => {
         .send({
           email: generateTestEmail(),
           password: 'TestPassword123!',
-          first_name: 'John',
+          first_name: 'Pepe',
         })
         .expect(400);
     });
@@ -104,8 +113,8 @@ describe('User Module (E2E)', () => {
         .send({
           email: duplicateEmail,
           password: 'TestPassword123!',
-          first_name: 'John',
-          last_name: 'Doe',
+          first_name: 'Pepe',
+          last_name: 'Perez',
         })
         .expect(201)
         .then(() => {
@@ -208,8 +217,7 @@ describe('User Module (E2E)', () => {
 
     it('should get user profile with valid user_id', () => {
       return request(app.getHttpServer())
-        .get('/users/profile')
-        .send(testUserId)
+        .get(`/users/profile/${testUserId}`)
         .expect(200)
         .then((response) => {
           expect(response.body).toHaveProperty('user_id');
@@ -222,15 +230,13 @@ describe('User Module (E2E)', () => {
 
     it('should return 400 when user_id is not provided', () => {
       return request(app.getHttpServer())
-        .get('/users/profile')
-        .send('')
-        .expect(400);
+        .get('/users/profile/')
+        .expect(404); // Endpoint requiere user_id en la URL
     });
 
     it('should return error with non-existent user_id', () => {
       return request(app.getHttpServer())
-        .get('/users/profile')
-        .send('00000000-0000-0000-0000-000000000000')
+        .get('/users/profile/00000000-0000-0000-0000-000000000000')
         .expect(500); // Error de Supabase
     });
   });
@@ -328,8 +334,7 @@ describe('User Module (E2E)', () => {
 
     it('should get user profile with addresses', () => {
       return request(app.getHttpServer())
-        .get('/users/profile-with-addresses')
-        .send({ user_id: testUserId })
+        .get(`/users/profile-with-addresses/${testUserId}`)
         .expect(200)
         .then((response) => {
           expect(response.body).toHaveProperty('user_id');

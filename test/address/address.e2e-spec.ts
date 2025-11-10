@@ -5,15 +5,23 @@ import { AddressModule } from '../../src/address/address.module';
 import { SupabaseModule } from '../../src/supabase/supabase.module';
 import { UserModule } from '../../src/user/user.module';
 import { generateTestEmail } from '../helpers/test.helper';
+import { createMockSupabaseClient } from '../mocks/supabase.mock';
 
 describe('Address Module (E2E)', () => {
   let app: INestApplication;
   let testUserId: string;
+  let mockSupabaseClient: any;
 
   beforeAll(async () => {
+    // Crear mock de Supabase
+    mockSupabaseClient = createMockSupabaseClient();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [SupabaseModule, AddressModule, UserModule],
-    }).compile();
+    })
+      .overrideProvider('SUPABASE_CLIENT')
+      .useValue(mockSupabaseClient)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -29,10 +37,11 @@ describe('Address Module (E2E)', () => {
         last_name: 'Tester',
       });
 
-    testUserId = userResponse.body.user.id;
-  });
+      testUserId = userResponse.body.user?.id;
+    });
 
   afterAll(async () => {
+    mockSupabaseClient._clearDatabase();
     await app.close();
   });
 
@@ -45,6 +54,8 @@ describe('Address Module (E2E)', () => {
           street_address: '123 Main Street',
           city: 'Springfield',
           postal_code: '12345',
+          lat: 39.7817,
+          long: -89.6501,
           details: 'Apartment 4B, Ring doorbell twice',
         })
         .expect(201)
@@ -61,6 +72,8 @@ describe('Address Module (E2E)', () => {
           street_address: '456 Oak Avenue',
           city: 'Shelbyville',
           postal_code: '67890',
+          lat: 39.7942,
+          long: -89.6064,
         })
         .expect(201)
         .then((response) => {
@@ -74,6 +87,8 @@ describe('Address Module (E2E)', () => {
         street_address: '789 Duplicate Street',
         city: 'TestCity',
         postal_code: '99999',
+        lat: 40.0,
+        long: -90.0,
       };
 
       // Primera creación
@@ -145,8 +160,10 @@ describe('Address Module (E2E)', () => {
         .send({
           user_id: testUserId,
           street_address: "123 O'Brien St, Apt #4B",
-          city: "St. John's",
+          city: "St. Pepe's",
           postal_code: 'A1B 2C3',
+          lat: 41.0,
+          long: -71.0,
           details: 'Notes: Use back entrance & ring twice!',
         })
         .expect(201);
@@ -157,7 +174,7 @@ describe('Address Module (E2E)', () => {
     let userWithAddresses: string;
 
     beforeAll(async () => {
-      // Crear un nuevo usuario
+    // Crear un nuevo usuario
       const userResponse = await request(app.getHttpServer())
         .post('/users')
         .send({
@@ -167,7 +184,7 @@ describe('Address Module (E2E)', () => {
           last_name: 'Address',
         });
 
-      userWithAddresses = userResponse.body.user.id;
+      userWithAddresses = userResponse.body.user?.id;
 
       // Crear múltiples direcciones para este usuario
       await request(app.getHttpServer()).post('/address').send({
@@ -175,6 +192,8 @@ describe('Address Module (E2E)', () => {
         street_address: '111 First Street',
         city: 'City1',
         postal_code: '11111',
+        lat: 41.1,
+        long: -71.1,
         details: 'First address',
       });
 
@@ -183,6 +202,8 @@ describe('Address Module (E2E)', () => {
         street_address: '222 Second Street',
         city: 'City2',
         postal_code: '22222',
+        lat: 41.2,
+        long: -71.2,
         details: 'Second address',
       });
 
@@ -191,13 +212,16 @@ describe('Address Module (E2E)', () => {
         street_address: '333 Third Street',
         city: 'City3',
         postal_code: '33333',
+        lat: 41.3,
+        long: -71.3,
       });
     });
 
     it('should get all addresses for a user', () => {
       return request(app.getHttpServer())
         .get('/address')
-        .send(userWithAddresses)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userWithAddresses })
         .expect(200)
         .then((response) => {
           expect(Array.isArray(response.body)).toBe(true);
@@ -221,11 +245,12 @@ describe('Address Module (E2E)', () => {
           last_name: 'Address',
         });
 
-      const newUserId = newUserResponse.body.user.id;
+      const newUserId = newUserResponse.body.user?.id;
 
       return request(app.getHttpServer())
         .get('/address')
-        .send(newUserId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: newUserId })
         .expect(200)
         .then((response) => {
           expect(Array.isArray(response.body)).toBe(true);
@@ -236,7 +261,8 @@ describe('Address Module (E2E)', () => {
     it('should return error for invalid user_id format', () => {
       return request(app.getHttpServer())
         .get('/address')
-        .send('invalid-uuid-format')
+        .set('Content-Type', 'application/json')
+        .send({ user_id: 'invalid-uuid-format' })
         .expect(400);
     });
   });
@@ -256,7 +282,7 @@ describe('Address Module (E2E)', () => {
           last_name: 'Test',
         });
 
-      userForUpdate = userResponse.body.user.id;
+      userForUpdate = userResponse.body.user?.id;
 
       // Crear una dirección para actualizar
       await request(app.getHttpServer()).post('/address').send({
@@ -264,13 +290,16 @@ describe('Address Module (E2E)', () => {
         street_address: '999 Original Street',
         city: 'Original City',
         postal_code: '99999',
+        lat: 42.0,
+        long: -72.0,
         details: 'Original details',
       });
 
       // Obtener el ID de la dirección creada
       const addressesResponse = await request(app.getHttpServer())
         .get('/address')
-        .send(userForUpdate);
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userForUpdate });
 
       addressId = addressesResponse.body[0].id;
     });
@@ -279,22 +308,22 @@ describe('Address Module (E2E)', () => {
       return request(app.getHttpServer())
         .patch('/address')
         .send({
-          user_id: addressId,
+          id: addressId,
+          user_id: userForUpdate,
           street_address: '999 Updated Street',
           city: 'Updated City',
           postal_code: '88888',
           details: 'Updated details',
         })
         .expect(200);
-      // Nota: Actualmente UpdateAddress no está implementado,
-      // este test fallará hasta que se implemente
     });
 
     it('should handle partial address update', () => {
       return request(app.getHttpServer())
         .patch('/address')
         .send({
-          user_id: addressId,
+          id: addressId,
+          user_id: userForUpdate,
           city: 'New City Only',
         })
         .expect(200);
@@ -324,7 +353,7 @@ describe('Address Module (E2E)', () => {
         })
         .expect(201);
 
-      const userId = userResponse.body.user.id;
+      const userId = userResponse.body.user?.id;
       expect(userId).toBeDefined();
 
       // 2. Crear primera dirección
@@ -335,6 +364,8 @@ describe('Address Module (E2E)', () => {
           street_address: '100 Home Street',
           city: 'Home City',
           postal_code: '10000',
+          lat: 43.0,
+          long: -73.0,
           details: 'Home address',
         })
         .expect(201);
@@ -347,6 +378,8 @@ describe('Address Module (E2E)', () => {
           street_address: '200 Work Street',
           city: 'Work City',
           postal_code: '20000',
+          lat: 43.1,
+          long: -73.1,
           details: 'Work address',
         })
         .expect(201);
@@ -354,7 +387,8 @@ describe('Address Module (E2E)', () => {
       // 4. Verificar que el usuario tiene 2 direcciones
       const addressesResponse = await request(app.getHttpServer())
         .get('/address')
-        .send(userId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userId })
         .expect(200);
 
       expect(addressesResponse.body.length).toBe(2);
@@ -368,8 +402,10 @@ describe('Address Module (E2E)', () => {
           street_address: '123 Fake Street',
           city: 'Fake City',
           postal_code: '00000',
+          lat: 44.0,
+          long: -74.0,
         })
-        .expect(500); // Error de foreign key constraint
+        .expect(400); // Validación de user_id o user no existe
     });
   });
 
@@ -386,7 +422,7 @@ describe('Address Module (E2E)', () => {
         })
         .expect(201);
 
-      const userId = signupResponse.body.user.id;
+      const userId = signupResponse.body.user?.id;
 
       // 2. Agrega dirección de casa
       await request(app.getHttpServer())
@@ -396,6 +432,8 @@ describe('Address Module (E2E)', () => {
           street_address: '742 Evergreen Terrace',
           city: 'Springfield',
           postal_code: '58008',
+          lat: 39.78,
+          long: -89.65,
           details: 'Ring doorbell',
         })
         .expect(201);
@@ -408,6 +446,8 @@ describe('Address Module (E2E)', () => {
           street_address: '1060 W Addison St',
           city: 'Chicago',
           postal_code: '60613',
+          lat: 41.94,
+          long: -87.63,
           details: 'Office building, 5th floor',
         })
         .expect(201);
@@ -415,7 +455,8 @@ describe('Address Module (E2E)', () => {
       // 4. Lista todas sus direcciones
       const listResponse = await request(app.getHttpServer())
         .get('/address')
-        .send(userId)
+        .set('Content-Type', 'application/json')
+        .send({ user_id: userId })
         .expect(200);
 
       expect(listResponse.body.length).toBe(2);
@@ -425,8 +466,7 @@ describe('Address Module (E2E)', () => {
 
       // 5. Obtiene perfil con direcciones
       const profileResponse = await request(app.getHttpServer())
-        .get('/users/profile-with-addresses')
-        .send({ user_id: userId })
+        .get(`/users/profile-with-addresses/${userId}`)
         .expect(200);
 
       expect(profileResponse.body).toHaveProperty('addresses');
