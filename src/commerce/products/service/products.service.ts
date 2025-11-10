@@ -29,22 +29,10 @@ export class ProductsService {
     const createdProduct = await this.productRepository.createProduct(product);
 
 
-    /* const productId = createdProduct.getId();
-     const categoryIds = dto.getCategoryIds();
- 
-     if (productId && categoryIds && categoryIds.length > 0) {
-       await this.productRepository.assignCategories(productId, categoryIds);
-     }*/
-
     return createdProduct;
   }
 
-  findAll(vendorName?: string) {
-    if (vendorName) {
-      return this.productRepository.findByVendorName(vendorName);
-    }
-    return this.productRepository.findAll();
-  }
+  
 
   async findOne(id: number) {
     const product = await this.productRepository.findById(id);
@@ -60,7 +48,7 @@ export class ProductsService {
 
 
   async update(id: number, updateProductDto: UpdateProductDto) {
-    const existingProduct = await this.findOne(id); // Asegura que el producto existe y obtiene sus datos
+    const existingProduct = await this.findOne(id); 
 
     const productToUpdate = new Product(
       updateProductDto.name ?? existingProduct.getName(),
@@ -68,15 +56,14 @@ export class ProductsService {
       updateProductDto.image_url ?? existingProduct.getImageUrl(),
       updateProductDto.price ?? existingProduct.getPrice(),
       updateProductDto.is_available ?? existingProduct.getIsAvailable(),
-      existingProduct.getVendorId(),
-      existingProduct.getCategoryIds(),
+      existingProduct.getVendorId()!,
+      updateProductDto.category_ids ?? existingProduct.getCategoryIds()!,
+      existingProduct.getVendorName(),
       id,
     );
 
     const updatedProduct = await this.productRepository.update(productToUpdate);
-    if (updateProductDto.category_ids) {
-      await this.productRepository.assignCategories(id, updateProductDto.category_ids);
-    }
+
     return updatedProduct;
   }
 
@@ -106,4 +93,9 @@ export class ProductsService {
   async getProductsForCategory(categoryId: number) {
     return this.productCategoryRepository.getProductsForCategory(categoryId);
   }
+
+  async findByVendorId(vendorId: string) {
+    return this.productRepository.findByVendorId(vendorId);
+  }
+
 }

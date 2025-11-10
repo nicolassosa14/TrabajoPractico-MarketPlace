@@ -27,6 +27,10 @@ export default class PutVendorRequestDTO{
     @IsBoolean()
     @IsNotEmpty()
     is_active: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    image_url: string;
 }
 
 export class PatchVendorRequestDTO{
@@ -54,4 +58,6 @@ export class PatchVendorRequestDTO{
     @IsBoolean()
     @IsNotEmpty()
     is_active?: boolean;
+
+    
 }

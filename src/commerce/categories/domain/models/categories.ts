@@ -3,6 +3,7 @@ export default class categories {
         private readonly name: string,
         private readonly description : string,
          private readonly user_id: string,
+        private readonly image_url : string,
         private readonly id?: number,
         
 
@@ -24,5 +25,9 @@ export default class categories {
 
     public getUserId(){
         return this.user_id
+    }
+
+    public getImageUrl() : string {
+        return this.image_url
     }
 }

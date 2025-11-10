@@ -12,18 +12,19 @@ export class VendorService {
 
   constructor(
     @Inject('VendorRepository') private readonly vendorRepository: VendorRepository,
+    
 
   ) { }
 
   async createVendor(dto: CreateVendorCommand) {
     const vendor = new Vendor(
-      dto.description,
-      dto.address,
-      dto.is_active,
-      dto.user_id,
-      dto.name,
-      undefined // id
-    )
+  dto.name,
+  dto.description,
+  dto.address,
+  dto.is_active,
+  dto.user_id,
+  dto.image_url, 
+)
 
 
     return this.vendorRepository.createVendor(vendor)
@@ -37,22 +38,18 @@ export class VendorService {
     return vendor;
   }
 
-  async findByEmail(email: string): Promise<Vendor | null> {
-    const vendor = await this.vendorRepository.findByEmail(email);
-    if (!vendor) {
-      throw new NotFoundException(`Vendor con email ${email} no encontrado`);
-    }
-    return vendor;
-  }
+
 
   async update(command: UpdatePutVendorCommand): Promise<Vendor> {
     await this.findById(command.getId());
 
     const vendorToUpdate = new Vendor(
+      command.getName(),
       command.getDescription(),
       command.getAddress(), // Corregido para que coincida con el modelo
       command.getIsActive(),
-      command.getName(),
+      command.getImageUrl(),
+      command.getName(), 
 
     );
 
@@ -67,6 +64,8 @@ export class VendorService {
   async findAll(): Promise<Vendor[]> {
     return this.vendorRepository.findAll();
   }
+
+
 
 
 

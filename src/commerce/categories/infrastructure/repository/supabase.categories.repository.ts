@@ -25,6 +25,7 @@ export class SupabaseCategoryRepository implements CategoryRepository {
             .insert({
                 name: categories.getName(),
                 description: categories.getDescription(),
+                image_url: categories.getImageUrl(),
             })
             .select();
 
@@ -49,7 +50,11 @@ export class SupabaseCategoryRepository implements CategoryRepository {
         return data;
     }
     async findAll(name?: string): Promise<categories[]> {
-        let query = this.supabaseClient.from('categories').select('*');
+        let query = this.supabaseClient
+            .from('categories')
+            .select('id, name, description, image_url');
+
+
 
         if (name) {
 
@@ -62,6 +67,6 @@ export class SupabaseCategoryRepository implements CategoryRepository {
             throw new Error('Error buscando categorías: ' + error.message);
         }
 
-        return data.map(cat => new categories(cat.name, cat.description, cat.id));
+        return data.map(cat => new categories(cat.name, cat.description,cat.id, cat.image_url));
     }
 }

@@ -22,4 +22,9 @@ export class createVendorRequestDto {
     @IsString()
     @IsNotEmpty() 
     user_id: string;
+
+    @IsString()
+    @IsNotEmpty() 
+    image_url: string;
+
 }

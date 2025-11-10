@@ -15,13 +15,14 @@ export class CategoriesService {
     const categoria = new categories(
       dto.name,
       dto.description,
+      dto.image_url,
       dto.user_id,
     )
     return this.categoriesRepository.createcategories(categoria)
   }
 
-  async findAll(name?: string) {
-    return this.categoriesRepository.findAll(name);
+  async findAll(name?: string , image_url?:string) {
+    return this.categoriesRepository.findAll(name, image_url);
   }
 
   findOne(id: number) {
