@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { VendorModule } from './commerce/vendor/vendor.module';
-import { UserController } from './user/presentacion/user.controller';
+import { UserController } from './user/presentation/user.controller';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/service/user.service';
 import { SupabaseModule } from './supabase/supabase.module';
@@ -13,6 +13,7 @@ import { LogisticsModule } from './logistics/logistics.module';
 import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminModule } from './admin/admin.module';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AdminModule } from './admin/admin.module';
     SupabaseModule,
     PaymentsModule,
     AdminModule,
+    AddressModule
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

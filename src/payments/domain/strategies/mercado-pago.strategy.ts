@@ -1,4 +1,3 @@
-// src/modules/payments/domain/strategies/mercado-pago.strategy.ts
 import { PaymentStrategy } from './payment.strategy';
 import { Payment } from '../entities/payment.entity';
 import { MercadoPagoAdapter } from '../../infrastructure/adapters/mercado-pago.adapter';
@@ -7,7 +6,6 @@ import { MercadoPagoAdapter } from '../../infrastructure/adapters/mercado-pago.a
     constructor(private adapter: MercadoPagoAdapter) {}
 
     async process(payment: Payment): Promise<{ transactionId?: string; checkoutUrl?: string }> {
-        // crear preferencia
         const pref = await this.adapter.createPreference({
         items: [
             {

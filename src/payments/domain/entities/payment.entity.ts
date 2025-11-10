@@ -1,14 +1,16 @@
 export type PaymentMethod = 'credit_card' | 'paypal' | 'cash' | 'mercado_pago';
 export type PaymentStatus = 'succeeded' | 'failed' | 'pending' | 'cancelled';
 
+
+
 export class Payment {
   constructor(
     public id: string,
     public orderId: string,
     public amount: number,
     public tipAmount: number = 0,
-    public paymentMethod: PaymentMethod = 'cash',
-    public status: PaymentStatus = 'succeeded',
+    public paymentMethod: PaymentMethod,
+    public status: PaymentStatus = 'pending',
     public transactionId?: string,
     public createdAt: Date = new Date()
   ) {}
