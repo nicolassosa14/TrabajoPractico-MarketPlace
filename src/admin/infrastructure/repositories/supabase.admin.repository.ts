@@ -34,15 +34,17 @@ export class SupabaseAdminRepository implements AdminRepository {
   }
 
   async findAllByRole(role: string) {
-    if (!['vendor', 'driver'].includes(role)) {
+    if (role !== 'vendor' && role !== 'driver' && role !== 'customer' && role !== 'all-users') {
       throw new HttpException(`Rol "${role}" no permitido`, HttpStatus.BAD_REQUEST);
     }
 
     try {
-      const { data, error } = await this.supabaseAdmin.auth.admin.listUsers();
+      const { data, error } = await this.supabaseAdmin.from('user_profiles').select('user_id, email, role');
       if (error) throw error;
-
-      return data.users.filter((u) => u.user_metadata?.role === role);
+      if (role !== 'all-users') {
+        return data.filter((user: any) => user.role === role);
+      }
+      return data.filter((user: any) => user.role);
     } catch (error: any) {
       throw new HttpException(`Error al obtener usuarios: ${error.message}`, HttpStatus.BAD_REQUEST);
     }
