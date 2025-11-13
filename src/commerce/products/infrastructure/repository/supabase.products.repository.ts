@@ -41,7 +41,7 @@ export class SupabaseProductRepository implements ProductRepository {
       .insert({
         name: product.getName(),
         description: product.getDescription(),
-        Image_url: product.getImageUrl(),
+        image_url: product.getImageUrl(),
         price: product.getPrice(),
         is_available: product.getIsAvailable(),
         vendor_id: vendorData.id,
@@ -258,7 +258,7 @@ export class SupabaseProductRepository implements ProductRepository {
       id,
       name,
       description,
-      Image_url,
+      image_url,
       price,
       is_available,
       category_ids,
@@ -285,7 +285,7 @@ export class SupabaseProductRepository implements ProductRepository {
       const dto: ProductResponseDTO = {
         name: p.name,
         description: p.description,
-        Image_url: p.image_url,
+        image_url: p.image_url,
         price: p.price,
         is_available: p.is_available,
         vendor_id: p.vendor_id,
