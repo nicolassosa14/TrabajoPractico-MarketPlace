@@ -8,15 +8,6 @@ import {
 } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import User from '../../domain/models/user';
-
-//eliminar
-import DeleteUserCommand from 'src/user/service/dto/DeleteUser.dto';
-import UpdatePutUserCommand from 'src/user/service/dto/UpdateUser.dto';
-import UpdatePatchUserCommand from 'src/user/service/dto/UpdateUser.dto';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { exec } from 'node:child_process';
-import { profile } from 'node:console';
-//
 @Injectable()
 export class SupabaseUserRepository implements UserRepository {
   constructor(
@@ -60,7 +51,9 @@ export class SupabaseUserRepository implements UserRepository {
     }
   }
 
-  async EditUserProfile(id: number, user: User): Promise<any> {}
+  async EditUserProfile(id: number, user: User): Promise<any> {
+    // Este método está sin implementar.
+  }
 
   async getUserProfile(user_id: string): Promise<any> {
     const { data, error } = await this.supabaseClient
@@ -115,32 +108,25 @@ export class SupabaseUserRepository implements UserRepository {
       'and partialUser:',
       partialUser,
     );
-    try {
-      const { data: existingUser, error: searchError } =
-        await this.supabaseClient
-          .from('user_profiles')
-          .select('*')
-          .eq('user_id', id)
-          .single();
+    const { data: existingUser, error: searchError } = await this.supabaseClient
+      .from('user_profiles')
+      .select('user_id')
+      .eq('user_id', id)
+      .single();
 
-      if (searchError || !existingUser) {
-        throw new BadRequestException(`Usuario no encontrado con ID: ${id}`);
-      }
-      const { data, error } = await this.supabaseClient
-        .from('user_profiles')
-        .update(partialUser)
-        .eq('user_id', id)
-        .select()
-        .single();
-
-      if (error) {
-        throw new BadRequestException(`Error actualizando usuario: ${error.message}`);
-      }
-
-      return data;
-    } catch (error) {
-      throw new BadRequestException(`Error en updatePartial: ${error.message}`);
+    if (searchError || !existingUser) {
+      throw new BadRequestException(`Error en updatePartial: Usuario no encontrado con ID: ${id}`);
     }
+    const { data, error } = await this.supabaseClient
+      .from('user_profiles')
+      .update(partialUser)
+      .eq('user_id', id)
+      .select()
+      .single();
+    if (error) {
+      throw new BadRequestException(`Error en updatePartial: Error actualizando usuario: ${error.message}`);
+    }
+    return data;
   }
 
   async findById(id: number): Promise<any> {

@@ -59,20 +59,13 @@ export class UserController {
     if (!dto.user_id) {
       throw new BadRequestException('Se requiere el ID del usuario');
     }
-    const updateData: Partial<PatchUserRequestDTO> = {};
-
-    if (dto.email !== undefined) updateData.email = dto.email;
-    if (dto.first_name !== undefined) updateData.first_name = dto.first_name;
-    if (dto.last_name !== undefined) updateData.last_name = dto.last_name;
-    if (dto.phone_number !== undefined)
-      updateData.phone_number = dto.phone_number;
 
     const command = new PatchUserCommand(
       dto.user_id,
-      updateData.email,
-      updateData.first_name,
-      updateData.last_name,
-      updateData.phone_number,
+      dto.first_name,
+      dto.last_name,
+      dto.email,
+      dto.phone_number,
     );
 
     return this.userService.EditUserInfo(command);
