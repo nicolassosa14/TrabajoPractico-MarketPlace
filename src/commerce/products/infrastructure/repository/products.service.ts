@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import CreateProductCommandDTO from './dto/CreateProductCommand.dto';
-import { UpdateProductDto } from '../presentacion/dto/UpdateProductRequest.dto';
-import Product from '../domain/models/products';
+import CreateProductCommandDTO from '../../service/dto/CreateProductCommand.dto';
+import { UpdateProductDto } from '../../presentacion/dto/UpdateProductRequest.dto';
+import Product from '../../domain/models/products';
 import { dot } from 'node:test/reporters';
-import type { ProductRepository } from '../domain/contract/products.respository';
+import type { ProductRepository } from '../../domain/contract/products.respository';
 import { NotFoundException } from '@nestjs/common';
 import type { ProductCategoryRepository } from 'src/commerce/product_category/contract/Product_category.repository';
 @Injectable()
@@ -36,7 +36,7 @@ export class ProductsService {
     return this.productRepository.findAll();
   }
 
-
+  
 
   async findOne(id: number) {
     const product = await this.productRepository.findById(id);
@@ -52,7 +52,7 @@ export class ProductsService {
 
 
   async update(id: number, updateProductDto: UpdateProductDto) {
-    const existingProduct = await this.findOne(id);
+    const existingProduct = await this.findOne(id); 
 
     const productToUpdate = new Product(
       updateProductDto.name ?? existingProduct.getName(),
@@ -67,6 +67,11 @@ export class ProductsService {
     );
 
     const updatedProduct = await this.productRepository.update(productToUpdate);
+
+    // Actualizar categorías si se proporcionan
+    if (updateProductDto.category_ids) {
+      await this.updateProductCategories(id, updateProductDto.category_ids);
+    }
 
     return updatedProduct;
   }

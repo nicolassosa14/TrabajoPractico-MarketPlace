@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import Product from '../../domain/models/products';
 import { ProductRepository } from '../../domain/contract/products.respository';
-import { ProductResponseDTO } from '../../service/DTO/ProductResponseDTO';
+import { ProductResponseDTO } from '../../service/dto/ProductResponseDTO';
 function normalizeText(text: string): string {
   return text
     .normalize('NFD')               // descompone caracteres con tildes (á -> a + ́)
@@ -18,8 +18,8 @@ export class SupabaseProductRepository implements ProductRepository {
   async createProduct(product: Product): Promise<Product> {
     const userId = product.getVendorId();
     if (!userId) {
-        throw new Error("Debes iniciar sesión como vendedor para crear productos.");
-      }
+      throw new Error("Debes iniciar sesión como vendedor para crear productos.");
+    }
 
     console.log('userId:', userId);
     const { data: vendorData, error: vendorError } = await this.supabase
@@ -27,7 +27,7 @@ export class SupabaseProductRepository implements ProductRepository {
       .select('id, user_id, name')
       .eq('user_id', userId)
       .maybeSingle();
-      
+
     if (vendorError) {
       throw new Error('Error al consultar vendors: ' + vendorError.message);
     }

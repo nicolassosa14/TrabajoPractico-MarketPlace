@@ -1,5 +1,5 @@
 import Product from '../models/products';
-import { ProductResponseDTO } from '../../service/DTO/ProductResponseDTO';
+import { ProductResponseDTO } from '../../service/dto/ProductResponseDTO';
 export interface ProductRepository {
     createProduct(product: Product): Promise<Product>;
     findById(id: number): Promise<Product | null>;
