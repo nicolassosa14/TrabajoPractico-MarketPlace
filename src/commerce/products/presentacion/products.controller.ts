@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query 
 import { ProductsService } from '../service/products.service';
 import { CreateProductRequestDTO } from '../presentacion/dto/CreateProductRequest.dto';
 import { UpdateProductDto } from './dto/UpdateProductRequest.dto';
-import CreateProductCommandDTO from '../service/DTO/CreateProductCommand.dto';
+import CreateProductCommandDTO from '../service/dto/CreateProductCommand.dto';
 import { find } from 'rxjs';
 
 
@@ -41,9 +41,9 @@ export class ProductsController {
   }
 
   @Get()
-    findAll() {
+  findAll() {
     return this.productsService.findAll();
-    }
+  }
 
 
   /*@Patch(':id')

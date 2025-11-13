@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import Product from '../../domain/models/products';
 import { ProductRepository } from '../../domain/contract/products.respository';
-import { ProductResponseDTO } from '../../service/DTO/ProductResponseDTO';
+import { ProductResponseDTO } from '../../service/dto/ProductResponseDTO';
 function normalizeText(text: string): string {
   return text
     .normalize('NFD')               // descompone caracteres con tildes (á -> a + ́)
@@ -18,8 +18,8 @@ export class SupabaseProductRepository implements ProductRepository {
   async createProduct(product: Product): Promise<Product> {
     const userId = product.getVendorId();
     if (!userId) {
-        throw new Error("Debes iniciar sesión como vendedor para crear productos.");
-      }
+      throw new Error("Debes iniciar sesión como vendedor para crear productos.");
+    }
 
     console.log('userId:', userId);
     const { data: vendorData, error: vendorError } = await this.supabase
@@ -27,7 +27,7 @@ export class SupabaseProductRepository implements ProductRepository {
       .select('id, user_id, name')
       .eq('user_id', userId)
       .maybeSingle();
-      
+
     if (vendorError) {
       throw new Error('Error al consultar vendors: ' + vendorError.message);
     }
@@ -41,7 +41,7 @@ export class SupabaseProductRepository implements ProductRepository {
       .insert({
         name: product.getName(),
         description: product.getDescription(),
-        Image_url: product.getImageUrl(),
+        image_url: product.getImageUrl(),
         price: product.getPrice(),
         is_available: product.getIsAvailable(),
         vendor_id: vendorData.id,
@@ -258,7 +258,7 @@ export class SupabaseProductRepository implements ProductRepository {
       id,
       name,
       description,
-      Image_url,
+      image_url,
       price,
       is_available,
       category_ids,
@@ -285,7 +285,7 @@ export class SupabaseProductRepository implements ProductRepository {
       const dto: ProductResponseDTO = {
         name: p.name,
         description: p.description,
-        Image_url: p.image_url,
+        image_url: p.image_url,
         price: p.price,
         is_available: p.is_available,
         vendor_id: p.vendor_id,

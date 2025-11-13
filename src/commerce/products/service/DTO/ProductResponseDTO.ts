@@ -1,7 +1,7 @@
 export class ProductResponseDTO {
     name: string;
     description: string;
-    Image_url: string;
+    image_url: string;
     price: number;
     is_available: boolean;
     vendor_id: string;
