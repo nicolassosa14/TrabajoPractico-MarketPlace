@@ -41,9 +41,9 @@ export class ProductsController {
   }
 
   @Get()
-    findAll() {
+  findAll() {
     return this.productsService.findAll();
-    }
+  }
 
 
   /*@Patch(':id')
