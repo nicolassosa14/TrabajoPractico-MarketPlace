@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import CreateProductCommandDTO from '../service/DTO/CreateProductCommand.dto';
+import CreateProductCommandDTO from '../../products/service/dto/CreateProductCommand.dto';
 import { UpdateProductDto } from '../presentacion/dto/UpdateProductRequest.dto';
 import Product from '../domain/models/products';
 import { dot } from 'node:test/reporters';

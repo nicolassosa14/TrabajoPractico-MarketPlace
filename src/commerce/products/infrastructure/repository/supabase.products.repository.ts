@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import Product from '../../domain/models/products';
 import { ProductRepository } from '../../domain/contract/products.respository';
-import { ProductResponseDTO } from '../../service/DTO/ProductResponseDTO';
+import { ProductResponseDTO } from '../../service/dto/ProductResponseDTO';
 function normalizeText(text: string): string {
   return text
     .normalize('NFD')               // descompone caracteres con tildes (á -> a + ́)
