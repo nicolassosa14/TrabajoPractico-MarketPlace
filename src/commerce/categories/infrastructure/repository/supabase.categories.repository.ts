@@ -54,8 +54,6 @@ export class SupabaseCategoryRepository implements CategoryRepository {
             .from('categories')
             .select('id, name, description, image_url');
 
-
-
         if (name) {
 
             query = query.ilike('name', `%${name}%`);
