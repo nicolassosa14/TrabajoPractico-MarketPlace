@@ -16,16 +16,15 @@ export class SupabaseProductRepository implements ProductRepository {
   constructor(@Inject('SUPABASE_CLIENT') private readonly supabase: SupabaseClient) { }
 
   async createProduct(product: Product): Promise<Product> {
-    const userId = product.getVendorId();
-    if (!userId) {
+    const vendorId = product.getVendorId();
+    if (!vendorId) {
         throw new Error("Debes iniciar sesión como vendedor para crear productos.");
       }
 
-    console.log('userId:', userId);
     const { data: vendorData, error: vendorError } = await this.supabase
       .from('vendors')
       .select('id, user_id, name')
-      .eq('user_id', userId)
+      .eq('id', vendorId)
       .maybeSingle();
       
     if (vendorError) {
